@@ -1,3 +1,5 @@
+//MEMO: このクラスがいわゆるflow/で実現したい部分に当たる気がする。
+// そして、それをテストしやすいようにするイメージなのかも
 public class OpportunityUpdater {
     private final IRepository oppLineItemRepo;
 

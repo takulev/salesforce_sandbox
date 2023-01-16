@@ -90,6 +90,8 @@ public virtual class CrudMock extends Crud {
             return new RecordsWrapper(this.getRecordsMatchingType(recordList, sObjectType));
         }
 
+        //TODO: この辺り、どうにか型をよしなに設定できないか
+        // TODO: キャメルケースに修正
         public RecordsWrapper Accounts { get { return this.ofType(Schema.Account.SObjectType); }}
 
         public RecordsWrapper Leads { get { return this.ofType(Schema.Lead.SObjectType); }}
