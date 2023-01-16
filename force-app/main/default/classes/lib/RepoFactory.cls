@@ -1,3 +1,4 @@
+// MEMO: このクラスが自分が想定しているリポジトリに当たりそう
 public virtual class RepoFactory {
     public virtual IRepository getOppRepo() {
         List<SObjectField> queryFields = new List<SObjectField>{
@@ -8,6 +9,7 @@ public virtual class RepoFactory {
         return new Repository(Opportunity.SObjectType, queryFields);
     }
 
+    // TODO：ここは使う
     public virtual IRepository getOppLineItemRepo() {
         List<SObjectField> queryFields = new List<SObjectField>{
             OpportunityLineItem.Description,
@@ -16,6 +18,6 @@ public virtual class RepoFactory {
         };
         return new Repository(OpportunityLineItem.SObjectType, queryFields);
     }
-
+   
     //etc
 }

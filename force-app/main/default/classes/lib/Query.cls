@@ -224,3 +224,4 @@ public virtual class Query {
     return String.valueOf(predicate);
   }
 }
+

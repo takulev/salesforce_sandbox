@@ -1,3 +1,4 @@
+// TODO lib/のrepository使用する
 public with sharing class TalentActivityRepository implements TalentActivityRepositoryInterface {
     public TalentActivity__c getById(ID id) {
         if(!isAccessible()) {

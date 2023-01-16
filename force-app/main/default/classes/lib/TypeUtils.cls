@@ -1,3 +1,4 @@
+//TODO: 使用用途を見定める
 public abstract class TypeUtils {
     public static List<SObject> createSObjectList(SObject record) {
         String listType = 'List<' + record.getSObjectType() + '>';
