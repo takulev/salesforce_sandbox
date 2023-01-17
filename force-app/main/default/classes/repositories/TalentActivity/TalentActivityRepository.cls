@@ -14,8 +14,8 @@ public with sharing class TalentActivityRepository extends BaseRepository implem
         set;
     }
 
-    public TalentActivityRepository (Dml dml) {
-        super(dml);
+    public TalentActivityRepository () {
+        super();
     }
 
     public TalentActivity__c getById(ID id) {

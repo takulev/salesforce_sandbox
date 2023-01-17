@@ -8,8 +8,8 @@ public virtual class BaseRepository {
     protected List<SObjectField> fields {get; set;}
     protected SObjectType objectType {get; set;}
 
-    public BaseRepository (Dml dml) {
-        this.dml = dml;
+    public BaseRepository () {
+        this.dml = new Dml();
     }
 
     // SOQL
@@ -18,7 +18,12 @@ public virtual class BaseRepository {
     }
 
     public virtual List<SObject> get(List<QueryBuilder> queries) {
+        System.debug('【テスト】BaseRepository get()');
         String finalQuery = this.getSelectAndFrom() + this.addWheres(queries);
+
+        System.debug('【テスト】BaseRepository get() finalQuery');
+        System.debug(finalQuery);
+
         return this.performQuery(finalQuery);
       }
 
@@ -32,6 +37,12 @@ public virtual class BaseRepository {
 
     private String addSelectFields() {
         Set<String> fieldStrings = new Set<String>{ 'Id' };
+        System.debug('【テスト】BaseRepository addSelectFields()');
+
+        //TODO: バグ調査
+        // ->仮説：TalentActivityRepositoryのfieldsのgetが機能していない可能性がある。
+        System.debug(this.fields);
+
         for (SObjectField field : this.fields) {
           fieldStrings.add(field.getDescribe().getName());
         }
@@ -39,6 +50,7 @@ public virtual class BaseRepository {
     }
 
     private String addWheres(List<QueryBuilder> queries) {
+        System.debug('【テスト】BaseRepository addWheres()');
         List<String> wheres = new List<String>();
 
         for (QueryBuilder query : queries) {
@@ -53,6 +65,9 @@ public virtual class BaseRepository {
       }
 
     private List<SObject> performQuery(String finalQuery) {
+        System.debug('【テスト】BaseRepository performQuery()');
+        System.debug(finalQuery);
+
         System.debug('Query: \n' + finalQuery);
         if (this.bindVar != null) {
           System.debug('Bind var: ' + this.bindVar);
