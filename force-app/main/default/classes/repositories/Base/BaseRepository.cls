@@ -5,11 +5,11 @@ public with sharing virtual class BaseRepository {
 
     //TODO: 使用用途を調査
     private Object bindVar;
-    private Boolean shortCircuit = false;
 
     //TODO: 何も設定してい場合にも、build関数で対応できるようにする
-    private String limitClause;
-    private String whereClause;
+    private String limitClause = null;
+    private String sortClause = null;
+    private String whereClause = null;
     private List<SObjectField> selectClause = null;
 
     public BaseRepository () {
@@ -36,7 +36,30 @@ public with sharing virtual class BaseRepository {
     }
 
     public BaseRepository setLimit(Integer value) {
-        this.limitClause = '\nLIMIT\n' + String.valueOf(value);
+        this.limitClause = ' LIMIT ' + String.valueOf(value);
+        return this;
+    }
+
+    public BaseRepository setOrderBy(SObjectField field, String direction) {
+        return this.setOrderBy(new List<SObjectField>{ field }, direction);
+    }
+
+    public BaseRepository setOrderBy(List<SObjectField> fields, String direction) {
+        Set<String> sortString = new Set<String>();
+
+        for (SObjectField field : fields) {
+            sortString.add(field.getDescribe().getName());
+        }
+
+        if(direction == null) {
+            //FIXME: ENUMにしたいが、ASCが予約語のため使用できないため、一旦文字列で代用。
+            direction = 'ASC';
+
+            //TODO: ENUMの代わりにException作成
+        }
+
+        this.sortClause = ' ORDER BY ' + String.join(new List<String>(sortString), ', ') + ' ' + direction;
+
         return this;
     }
 
@@ -50,28 +73,31 @@ public with sharing virtual class BaseRepository {
     }
 
     // SOQL
-    public virtual List<SObject> get(QueryBuilder query) {
-        return this.get(new List<QueryBuilder>{ query });
-    }
-
-    public virtual List<SObject> get(List<QueryBuilder> queries) {
-        String query = this.getSelectAndFrom() + this.addWheres(queries);
-
-        return this.execute(query);
+    public virtual List<SObject> get() {
+        return this.execute(buildQuery());
     }
 
     public virtual SObject first() {
         setLimit(1);
-        String query = this.getSelectAndFrom() + this.whereClause + this.limitClause;
-        return this.execute(query)[0];
+        return this.execute(buildQuery())[0];
     }
 
-    public virtual List<SObject> getAll() {
-        return this.execute(this.getSelectAndFrom());
-    }
+    private String buildQuery() {
+        String queryString = 'SELECT ' + this.getSelector() + ' FROM ' + this.objectType;
 
-    private String getSelectAndFrom() {
-        return 'SELECT ' + this.getSelector() + '\nFROM ' + this.objectType;
+        if (this.whereClause != null) {
+            queryString += this.whereClause;
+        }
+
+        if (this.limitClause != null) {
+            queryString += this.limitClause;
+        }
+
+        if(this.sortClause != null) {
+            queryString += this.sortClause;
+        }
+
+        return queryString;
     }
 
     private String getSelector() {
@@ -89,14 +115,12 @@ public with sharing virtual class BaseRepository {
         List<String> wheres = new List<String>();
 
         for (QueryBuilder query : queries) {
-          if (query.isEmpty()) {
-            this.shortCircuit = true;
-          } else if(this.bindVar == null) {
+          if(this.bindVar == null) {
             this.bindVar = query.getBindVars();
           }
           wheres.add(query.toString());
         }
-        return '\nWHERE ' + String.join(wheres, '\nAND');
+        return ' WHERE ' + String.join(wheres, ' AND');
       }
 
     private List<SObject> execute(String finalQuery) {
@@ -105,7 +129,7 @@ public with sharing virtual class BaseRepository {
           System.debug('Bind var: ' + this.bindVar);
         }
 
-        List<SObject> results = shortCircuit ? new List<SObject>() : Database.query(finalQuery);
+        List<SObject> results = Database.query(finalQuery);
         System.debug('Results: \n' + results);
         return results;
     }
