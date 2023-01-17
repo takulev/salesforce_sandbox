@@ -23,7 +23,7 @@ public with sharing class TalentActivityRepository extends BaseRepository implem
     }
 
     public TalentActivity__c getById(ID id) {
-        return (TalentActivity__c) super.first(QueryBuilder.equals(TalentActivity__c.Id, id));
+        return (TalentActivity__c) super.setWhere(QueryBuilder.equals(TalentActivity__c.Id, id)).first();
     }
 
     //TODO: オブジェクトの項目までアクセス権限を判定すべきか検討する

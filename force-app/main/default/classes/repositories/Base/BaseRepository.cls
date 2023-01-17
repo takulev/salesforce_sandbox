@@ -7,6 +7,11 @@ public with sharing virtual class BaseRepository {
     private Object bindVar;
     private Boolean shortCircuit = false;
 
+    //TODO: 何も設定してい場合にも、build関数で対応できるようにする
+    private String limitClause;
+    private String whereClause;
+    private List<SObjectField> selectClause = null;
+
     public BaseRepository () {
         this.dml = new Dml();
         this.fields = this.getFields();
@@ -21,6 +26,29 @@ public with sharing virtual class BaseRepository {
         return this.objectType;
     }
 
+    public BaseRepository setWhere(QueryBuilder query) {
+        return this.setWhere(new List<QueryBuilder>{ query });
+    }
+
+    public BaseRepository setWhere(List<QueryBuilder> queries) {
+        this.whereClause = this.addWheres(queries);
+        return this;
+    }
+
+    public BaseRepository setLimit(Integer value) {
+        this.limitClause = '\nLIMIT\n' + String.valueOf(value);
+        return this;
+    }
+
+    public BaseRepository setSelector(SObjectField selector) {
+        return this.setSelector(new List<SObjectField>{ selector });
+    }
+
+    public BaseRepository setSelector(List<SObjectField> selector) {
+        this.selectClause = selector;
+        return this;
+    }
+
     // SOQL
     public virtual List<SObject> get(QueryBuilder query) {
         return this.get(new List<QueryBuilder>{ query });
@@ -32,13 +60,9 @@ public with sharing virtual class BaseRepository {
         return this.execute(query);
     }
 
-    public virtual SObject first(QueryBuilder query) {
-        return this.first(new List<QueryBuilder>{ query });
-    }
-
-    public virtual SObject first(List<QueryBuilder> queries) {
-        String query = this.getSelectAndFrom() + this.addWheres(queries) + ' LIMIT 1';
-
+    public virtual SObject first() {
+        setLimit(1);
+        String query = this.getSelectAndFrom() + this.whereClause + this.limitClause;
         return this.execute(query)[0];
     }
 
@@ -47,15 +71,18 @@ public with sharing virtual class BaseRepository {
     }
 
     private String getSelectAndFrom() {
-        return 'SELECT ' + this.addSelectFields() + '\nFROM ' + this.objectType;
+        return 'SELECT ' + this.getSelector() + '\nFROM ' + this.objectType;
     }
 
-    private String addSelectFields() {
-        Set<String> fieldStrings = new Set<String>{ 'Id' };
-        for (SObjectField field : this.fields) {
-          fieldStrings.add(field.getDescribe().getName());
+    private String getSelector() {
+        Set<String> selectorStrings = new Set<String>{ 'Id' };
+        List<SObjectField> selectors = this.selectClause == null ? this.fields : this.selectClause;
+
+        for (SObjectField selector : selectors) {
+          selectorStrings.add(selector.getDescribe().getName());
         }
-        return String.join(new List<String>(fieldStrings), ', ');
+
+        return String.join(new List<String>(selectorStrings), ', ');
     }
 
     private String addWheres(List<QueryBuilder> queries) {
