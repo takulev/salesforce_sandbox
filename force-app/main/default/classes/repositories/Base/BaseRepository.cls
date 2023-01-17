@@ -1,12 +1,11 @@
-public virtual class BaseRepository {
+public with sharing virtual class BaseRepository {
     public Dml dml;
+    protected List<SObjectField> fields;
+    protected SObjectType objectType;
 
     //TODO: 使用用途を調査
     private Object bindVar;
     private Boolean shortCircuit = false;
-
-    protected List<SObjectField> fields;
-    protected SObjectType objectType;
 
     public BaseRepository () {
         this.dml = new Dml();
@@ -28,9 +27,9 @@ public virtual class BaseRepository {
     }
 
     public virtual List<SObject> get(List<QueryBuilder> queries) {
-        String finalQuery = this.getSelectAndFrom() + this.addWheres(queries);
+        String query = this.getSelectAndFrom() + this.addWheres(queries);
 
-        return this.performQuery(finalQuery);
+        return this.execute(query);
     }
 
     public virtual SObject first(QueryBuilder query) {
@@ -38,13 +37,13 @@ public virtual class BaseRepository {
     }
 
     public virtual SObject first(List<QueryBuilder> queries) {
-        String finalQuery = this.getSelectAndFrom() + this.addWheres(queries) + ' LIMIT 1';
+        String query = this.getSelectAndFrom() + this.addWheres(queries) + ' LIMIT 1';
 
-        return this.performQuery(finalQuery)[0];
+        return this.execute(query)[0];
     }
 
     public virtual List<SObject> getAll() {
-        return this.performQuery(this.getSelectAndFrom());
+        return this.execute(this.getSelectAndFrom());
     }
 
     private String getSelectAndFrom() {
@@ -73,7 +72,7 @@ public virtual class BaseRepository {
         return '\nWHERE ' + String.join(wheres, '\nAND');
       }
 
-    private List<SObject> performQuery(String finalQuery) {
+    private List<SObject> execute(String finalQuery) {
         System.debug('Query: \n' + finalQuery);
         if (this.bindVar != null) {
           System.debug('Bind var: ' + this.bindVar);
