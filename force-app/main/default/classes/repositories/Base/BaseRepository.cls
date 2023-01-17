@@ -3,9 +3,6 @@ public with sharing virtual class BaseRepository {
     protected List<SObjectField> fields;
     protected SObjectType objectType;
 
-    //TODO: 使用用途を調査
-    private Object bindVar;
-
     //TODO: 何も設定してい場合にも、build関数で対応できるようにする
     private String limitClause = null;
     private String sortClause = null;
@@ -115,9 +112,6 @@ public with sharing virtual class BaseRepository {
         List<String> wheres = new List<String>();
 
         for (QueryBuilder query : queries) {
-          if(this.bindVar == null) {
-            this.bindVar = query.getBindVars();
-          }
           wheres.add(query.toString());
         }
         return ' WHERE ' + String.join(wheres, ' AND');
@@ -125,10 +119,6 @@ public with sharing virtual class BaseRepository {
 
     private List<SObject> execute(String finalQuery) {
         System.debug('Query: \n' + finalQuery);
-        if (this.bindVar != null) {
-          System.debug('Bind var: ' + this.bindVar);
-        }
-
         List<SObject> results = Database.query(finalQuery);
         System.debug('Results: \n' + results);
         return results;
