@@ -1,9 +1,9 @@
 public virtual class CrudMock extends Crud {
-    public static List<SObject> InsertedRecords = new List<SObject>();
-    public static List<SObject> UpsertedRecords = new List<SObject>();
-    public static List<SObject> UpdatedRecords = new List<SObject>();
-    public static List<SObject> DeletedRecords = new List<SObject>();
-    public static List<SObject> UndeletedRecords = new List<SObject>();
+    private static List<SObject> insertedRecords = new List<SObject>();
+    private static List<SObject> upsertedRecords = new List<SObject>();
+    private static List<SObject> updatedRecords = new List<SObject>();
+    private static List<SObject> deletedRecords = new List<SObject>();
+    private static List<SObject> undeletedRecords = new List<SObject>();
 
     private static CrudMock thisCrudMock;
 
@@ -19,18 +19,18 @@ public virtual class CrudMock extends Crud {
     // DML
     public override List<SObject> doInsert(List<SObject> recordList) {
         TestingUtils.generateIds(recordList);
-        InsertedRecords.addAll(recordList);
+        insertedRecords.addAll(recordList);
         return recordList;
     }
 
     public override List<SObject> doUpdate(List<SObject> recordList) {
-        UpdatedRecords.addAll(recordList);
+        updatedRecords.addAll(recordList);
         return recordList;
     }
 
     public override List<SObject> doUpsert(List<SObject> recordList) {
         TestingUtils.generateIds(recordList);
-        UpsertedRecords.addAll(recordList);
+        upsertedRecords.addAll(recordList);
         return recordList;
     }
     public override List<SObject> doUpsert(List<SObject> recordList, Schema.SObjectField field) {
@@ -38,13 +38,13 @@ public virtual class CrudMock extends Crud {
     }
 
     public override List<SObject> doUndelete(List<SObject> recordList) {
-        UndeletedRecords.addAll(recordList);
+        undeletedRecords.addAll(recordList);
         return recordList;
     }
 
     public override void doDelete(List<SObject> recordList) {
         if(recordList != null && recordList.isEmpty() == false) {
-            DeletedRecords.addAll(recordList);
+            deletedRecords.addAll(recordList);
         }
     }
 
@@ -52,34 +52,36 @@ public virtual class CrudMock extends Crud {
 
     public static RecordsWrapper Inserted {
         get {
-            return new RecordsWrapper(InsertedRecords);
+            return new RecordsWrapper(insertedRecords);
         }
     }
 
     public static RecordsWrapper Upserted {
         get {
-            return new RecordsWrapper(UpsertedRecords);
+            return new RecordsWrapper(upsertedRecords);
         }
     }
 
     public static RecordsWrapper Updated {
         get {
-            return new RecordsWrapper(UpdatedRecords);
+            return new RecordsWrapper(updatedRecords);
         }
     }
 
     public static RecordsWrapper Deleted {
         get {
-            return new RecordsWrapper(DeletedRecords);
+            return new RecordsWrapper(deletedRecords);
         }
     }
 
     public static RecordsWrapper Undeleted {
         get {
-            return new RecordsWrapper(UndeletedRecords);
+            return new RecordsWrapper(undeletedRecords);
         }
     }
 
+    //TODO: ここのオブジェクトを直接指定している部分をどうするか
+    // Mockだからテストで使っているケースが多い
     public class RecordsWrapper {
         List<SObject> recordList;
         RecordsWrapper(List<SObject> recordList) {

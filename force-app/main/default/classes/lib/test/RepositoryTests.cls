@@ -83,8 +83,8 @@ private class RepositoryTests {
     Account acc = new Account();
     List<Account> accs = new List<Account>{ acc };
 
-    repo.doInsert(acc);
-    repo.doInsert(accs);
+    repo.insert(acc);
+    repo.insert(accs);
     System.assertEquals(acc, DMLMock.Inserted.Accounts.firstOrDefault);
 
     repo.doUpdate(acc);

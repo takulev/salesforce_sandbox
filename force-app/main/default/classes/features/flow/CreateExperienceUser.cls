@@ -7,15 +7,15 @@ public with sharing class CreateExperienceUser {
     @InvocableMethod(label='Experience Cloudユーザーの作成')
     public static void createUser(List<CreateExperienceUserRequest> request) {
         TalentActivity__c talentActivity;
-
         TalentActivityRepository talentActivityRepository = new TalentActivityRepository();
-        System.debug(talentActivityRepository);
-
 
         try {
             talentActivity = talentActivityRepository.getById(request[0].talentActivityId);
             System.debug('【debug】talentActivity');
             System.debug(LoggingLevel.INFO, talentActivity);
+
+
+            // TODO: service層に、マイページのサービスクラスを作成する。そのクラスからアカウント発行を行う
         } catch (Exception e) {
             System.debug(Logginglevel.ERROR, e);
         }
@@ -30,13 +30,5 @@ public with sharing class CreateExperienceUser {
 
         @InvocableVariable(description='人材活動ID')
         public ID talentActivityId;
-    }
-
-    public class Repository {
-        public TalentActivityRepository talentActivityRepository;
-
-        public Repository(String props) {
-            this.talentActivityRepository = new TalentActivityRepository();
-        }
     }
 }

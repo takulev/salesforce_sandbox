@@ -4,12 +4,14 @@ public virtual class Factory {
 
     private static Factory factory;
 
+    //TODO: ここつかう
     @testVisible
     protected Factory() {
         this.Crud = new Crud();
         this.RepoFactory = new RepoFactory();
     }
 
+    //TODO: 使うか微妙
     public static Factory getFactory() {
         //production code can only initialize the factory through this method
         if(factory == null) {
@@ -19,6 +21,7 @@ public virtual class Factory {
         return factory;
     }
 
+    //TODO: 使うか微妙
     //factory methods for initializing objects
     public OpportunityUpdater getOpportunityUpdater() {
         return new OpportunityUpdater(this);

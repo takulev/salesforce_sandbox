@@ -70,6 +70,7 @@ public virtual class Repository implements IRepository {
       return results;
     }
 
+    //MEMO: このdmlでCrudクラスを使用している可能性がある
     // DML
     public SObject doInsert(SObject record) {
       return this.dml.doInsert(record);
