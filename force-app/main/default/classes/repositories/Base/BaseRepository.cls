@@ -14,13 +14,13 @@ public with sharing virtual class BaseRepository {
         this.objectType = this.getObjectType();
     }
 
-    // SOQL
-    public virtual SObject first() {
+    public SObject first() {
         setLimit(1);
+
         return this.execute(this.buildQuery())[0];
     }
 
-    public virtual List<SObject> get() {
+    public List<SObject> get() {
         return this.execute(this.buildQuery());
     }
 
@@ -34,6 +34,7 @@ public with sharing virtual class BaseRepository {
 
     public BaseRepository setLimit(Integer value) {
         this.limitClause = ' LIMIT ' + String.valueOf(value);
+
         return this;
     }
 
@@ -66,6 +67,7 @@ public with sharing virtual class BaseRepository {
 
     public BaseRepository setSelector(List<SObjectField> selector) {
         this.selectClause = selector;
+
         return this;
     }
 
@@ -75,10 +77,10 @@ public with sharing virtual class BaseRepository {
 
     public BaseRepository setWhere(List<QueryBuilder> queries) {
         this.whereClause = this.addWheres(queries);
+
         return this;
     }
 
-    // DML
     public SObject doInsert(SObject record) {
         return this.dml.doInsert(record);
     }
@@ -166,13 +168,17 @@ public with sharing virtual class BaseRepository {
         for (QueryBuilder query : queries) {
           wheres.add(query.toString());
         }
+
         return ' WHERE ' + String.join(wheres, ' AND');
       }
 
     private List<SObject> execute(String finalQuery) {
         System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
+
         List<SObject> results = Database.query(finalQuery);
+
         System.debug(LoggingLevel.INFO, 'Results: \n' + results);
+
         return results;
     }
 }
