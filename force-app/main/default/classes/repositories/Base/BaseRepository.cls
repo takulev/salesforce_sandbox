@@ -3,7 +3,6 @@ public with sharing virtual class BaseRepository {
     protected List<SObjectField> fields;
     protected SObjectType objectType;
 
-    //TODO: 何も設定してい場合にも、build関数で対応できるようにする
     private String limitClause = null;
     private String sortClause = null;
     private String whereClause = null;
@@ -15,21 +14,22 @@ public with sharing virtual class BaseRepository {
         this.objectType = this.getObjectType();
     }
 
+    // SOQL
+    public virtual SObject first() {
+        setLimit(1);
+        return this.execute(this.buildQuery())[0];
+    }
+
+    public virtual List<SObject> get() {
+        return this.execute(this.buildQuery());
+    }
+
     public virtual List<SObjectField> getFields () {
         return this.fields;
     }
 
     public virtual SObjectType getObjectType () {
         return this.objectType;
-    }
-
-    public BaseRepository setWhere(QueryBuilder query) {
-        return this.setWhere(new List<QueryBuilder>{ query });
-    }
-
-    public BaseRepository setWhere(List<QueryBuilder> queries) {
-        this.whereClause = this.addWheres(queries);
-        return this;
     }
 
     public BaseRepository setLimit(Integer value) {
@@ -69,59 +69,13 @@ public with sharing virtual class BaseRepository {
         return this;
     }
 
-    // SOQL
-    public virtual List<SObject> get() {
-        return this.execute(buildQuery());
+    public BaseRepository setWhere(QueryBuilder query) {
+        return this.setWhere(new List<QueryBuilder>{ query });
     }
 
-    public virtual SObject first() {
-        setLimit(1);
-        return this.execute(buildQuery())[0];
-    }
-
-    private String buildQuery() {
-        String queryString = 'SELECT ' + this.getSelector() + ' FROM ' + this.objectType;
-
-        if (this.whereClause != null) {
-            queryString += this.whereClause;
-        }
-
-        if (this.limitClause != null) {
-            queryString += this.limitClause;
-        }
-
-        if(this.sortClause != null) {
-            queryString += this.sortClause;
-        }
-
-        return queryString;
-    }
-
-    private String getSelector() {
-        Set<String> selectorStrings = new Set<String>{ 'Id' };
-        List<SObjectField> selectors = this.selectClause == null ? this.fields : this.selectClause;
-
-        for (SObjectField selector : selectors) {
-          selectorStrings.add(selector.getDescribe().getName());
-        }
-
-        return String.join(new List<String>(selectorStrings), ', ');
-    }
-
-    private String addWheres(List<QueryBuilder> queries) {
-        List<String> wheres = new List<String>();
-
-        for (QueryBuilder query : queries) {
-          wheres.add(query.toString());
-        }
-        return ' WHERE ' + String.join(wheres, ' AND');
-      }
-
-    private List<SObject> execute(String finalQuery) {
-        System.debug('Query: \n' + finalQuery);
-        List<SObject> results = Database.query(finalQuery);
-        System.debug('Results: \n' + results);
-        return results;
+    public BaseRepository setWhere(List<QueryBuilder> queries) {
+        this.whereClause = this.addWheres(queries);
+        return this;
     }
 
     // DML
@@ -175,5 +129,50 @@ public with sharing virtual class BaseRepository {
 
     public void doHardDelete(List<SObject> records) {
         this.dml.doHardDelete(records);
+    }
+
+    private String buildQuery() {
+        String queryString = 'SELECT ' + this.getSelector() + ' FROM ' + this.objectType;
+
+        if (this.whereClause != null) {
+            queryString += this.whereClause;
+        }
+
+        if (this.limitClause != null) {
+            queryString += this.limitClause;
+        }
+
+        if(this.sortClause != null) {
+            queryString += this.sortClause;
+        }
+
+        return queryString;
+    }
+
+    private String getSelector() {
+        Set<String> selectorStrings = new Set<String>{ 'Id' };
+        List<SObjectField> selectors = this.selectClause == null ? this.fields : this.selectClause;
+
+        for (SObjectField selector : selectors) {
+          selectorStrings.add(selector.getDescribe().getName());
+        }
+
+        return String.join(new List<String>(selectorStrings), ', ');
+    }
+
+    private String addWheres(List<QueryBuilder> queries) {
+        List<String> wheres = new List<String>();
+
+        for (QueryBuilder query : queries) {
+          wheres.add(query.toString());
+        }
+        return ' WHERE ' + String.join(wheres, ' AND');
+      }
+
+    private List<SObject> execute(String finalQuery) {
+        System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
+        List<SObject> results = Database.query(finalQuery);
+        System.debug(LoggingLevel.INFO, 'Results: \n' + results);
+        return results;
     }
 }
