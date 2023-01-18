@@ -3,7 +3,10 @@ public with sharing class TalentActivityRepository extends BaseRepository implem
         get {
             return new List<SObjectField>{
                 TalentActivity__c.Id,
-                TalentActivity__c.Remarks__c
+                TalentActivity__c.TalentName__c,
+                TalentActivity__c.Name,
+                TalentActivity__c.Email__c,
+                TalentActivity__c.PhoneNumber__c
             };
         }
     }
