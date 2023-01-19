@@ -13,6 +13,8 @@ public with sharing virtual class BaseRepository {
         this.fields = this.getFields();
         this.objectType = this.getObjectType();
     }
+    //TODO: 下記の記事も参考にロジックを見直す
+    //https://developer.salesforce.com/docs/atlas.ja-jp.pages.meta/pages/pages_dynamic_vf_globals_objecttype.htm
 
     public SObject first() {
         setLimit(1);
@@ -173,11 +175,11 @@ public with sharing virtual class BaseRepository {
       }
 
     private List<SObject> execute(String finalQuery) {
-        System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
+        // System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
 
         List<SObject> results = Database.query(finalQuery);
 
-        System.debug(LoggingLevel.INFO, 'Results: \n' + results);
+        // System.debug(LoggingLevel.INFO, 'Results: \n' + results);
 
         return results;
     }

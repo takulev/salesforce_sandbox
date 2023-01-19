@@ -1,8 +1,6 @@
 public with sharing class ExternalUserService {
-    public String firstName {get; set;}
-    public String lastName {get; set;}
-    public String email {get; set;}
-    public String password {get; set {password = value == null ? value : value.trim(); } }
+    static final ID accountId = '0010T00000QXufwQAD';
+    static final ID profileId = '00e0T000000MS7RQAW';
 
     private TalentRepository talentRepository;
     private TalentActivityRepository talentActivityRepository;
@@ -12,7 +10,7 @@ public with sharing class ExternalUserService {
         this.talentActivityRepository = new TalentActivityRepository();
     }
 
-    public void createAccount(ID talentActivityId, ID accountId, ID profileId) {
+    public String createAccount(ID talentActivityId, String password) {
         TalentActivity__c talentActivity = this.talentActivityRepository.getById(talentActivityId);
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
         User user = this.buildUser(talent, talentActivity, profileId);
@@ -21,21 +19,27 @@ public with sharing class ExternalUserService {
         System.debug(LoggingLevel.INFO, 'talent: ' + talent);
         System.debug(LoggingLevel.INFO, 'user: ' + user);
 
+        String userId = '';
         try {
-            String userId = Site.createExternalUser(user, accountId, this.password);
+            System.debug(LoggingLevel.INFO, 'createExternalUser: ' + user);
+            userId = Site.createExternalUser(user, accountId, password);
+            System.debug(LoggingLevel.INFO, 'createExternalUser: ' + userId);
 
             // 人材活動オブジェクトにuserIdを保存
 
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
+            System.debug(LoggingLevel.INFO, 'errors: ' + errors);
 
             //TODO: 調査
             for (String error : errors)  {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, error));
             }
 
-            System.debug(e.getMessage());
+            System.debug(LoggingLevel.INFO, 'errors: ' + e.getMessage());
         }
+
+        return userId;
     }
 
     private User buildUser(Talent__c talent, TalentActivity__c talentActivity, ID profileId) {
