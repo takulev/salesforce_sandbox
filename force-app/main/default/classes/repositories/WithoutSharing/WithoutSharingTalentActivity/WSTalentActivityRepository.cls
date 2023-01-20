@@ -1,4 +1,9 @@
-public with sharing virtual class TalentActivityRepository extends BaseRepository implements TalentActivityRepositoryInterface {
+/**
+ * Experience Cloudで認証前のユーザ照合用のクラス.
+ *
+ * MEMO: 共有ルールを適用できないためTalentActivityRepositoryクラスと切り離して作成.
+ */
+public without sharing virtual class WSTalentActivityRepository extends BaseRepository implements WShTalentActivityRepositoryInterface {
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
@@ -13,7 +18,7 @@ public with sharing virtual class TalentActivityRepository extends BaseRepositor
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 
-    public TalentActivityRepository () {
+    public WSTalentActivityRepository () {
         super();
     }
 
@@ -28,9 +33,4 @@ public with sharing virtual class TalentActivityRepository extends BaseRepositor
     public virtual TalentActivity__c getById(ID id) {
         return (TalentActivity__c) super.setWhere(QueryBuilder.equals(TalentActivity__c.Id, id)).first();
     }
-
-    //TODO: オブジェクトの項目までアクセス権限を判定すべきか検討する
-    // private Boolean isAccessible() {
-    //     return TalentActivity__c.SObjectType.getDescribe().isAccessible();
-    // }
 }

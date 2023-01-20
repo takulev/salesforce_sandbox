@@ -1,4 +1,4 @@
-public with sharing virtual class BaseRepository {
+public without sharing virtual class BaseRepository {
     public Dml dml;
     protected List<SObjectField> fields;
     protected SObjectType objectType;
