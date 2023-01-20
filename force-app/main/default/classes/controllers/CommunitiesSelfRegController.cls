@@ -16,26 +16,40 @@ public class CommunitiesSelfRegController {
     public CommunitiesSelfRegController() {
         userService = new ExternalUserService();
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
-        this.initExId();
+
+        String expid = ApexPages.currentPage().getParameters().get('expid');
+        if (expId != null) {
+            Site.setExperienceId(expId);
+        }
     }
 
     public PageReference registerUser() {
-        if (!isValidPassword()) {
-            ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
-            ApexPages.addMessage(msg);
-            return null;
-        }
+        // Logger.db(password);
+        // if (true) {
+        //     ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, 'testだよ');
+        //     ApexPages.addMessage(msg);
+        //     return null;
+        // }
 
-        System.debug(LoggingLevel.INFO, 'password: ' + password);
-        System.debug(LoggingLevel.INFO, 'talentActivityId: ' + talentActivityId);
+        // if (!isValidPassword()) {
+        //     ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
+        //     ApexPages.addMessage(msg);
+        //     return null;
+        // }
+
+        // System.debug(LoggingLevel.INFO, 'password: ' + password);
+        // System.debug(LoggingLevel.INFO, 'talentActivityId: ' + talentActivityId);
+
+        // Logger.db('this.talentActivityId: ' + this.talentActivityId);
 
         String userId = this.userService.createAccount(
             this.talentActivityId,
-            password
+            password,
+            email
         );
 
-        System.debug(LoggingLevel.INFO, 'CommunitiesSelfRegController userId');
-        System.debug(LoggingLevel.INFO, userId);
+        // System.debug(LoggingLevel.INFO, 'CommunitiesSelfRegController userId');
+        // System.debug(LoggingLevel.INFO, userId);
 
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
 
