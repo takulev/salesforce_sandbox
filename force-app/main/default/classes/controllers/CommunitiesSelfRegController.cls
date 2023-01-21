@@ -13,13 +13,9 @@ public class CommunitiesSelfRegController {
     private ExternalUserService userService;
 
     public CommunitiesSelfRegController() {
-        userService = new ExternalUserService();
+        this.userService = new ExternalUserService();
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
-
-        String expid = ApexPages.currentPage().getParameters().get('expid');
-        if (expId != null) {
-            Site.setExperienceId(expId);
-        }
+        this.initExId();
     }
 
     public PageReference registerUser() {
