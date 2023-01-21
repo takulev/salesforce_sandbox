@@ -39,8 +39,7 @@ public class CommunitiesSelfRegController {
         if (user != null) {
             if (password != null && password.length() > 1) {
                 return Site.login(user.userName, password, ApexPages.currentPage().getParameters().get('startURL'));
-            }
-            else {
+            } else {
                 PageReference page = System.Page.CommunitiesSelfRegConfirm;
                 page.setRedirect(true);
                 return page;

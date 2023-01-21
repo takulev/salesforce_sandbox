@@ -16,9 +16,8 @@ public without sharing class ExternalUserService {
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
         User user = this.buildUser(talent, talentActivity);
 
-        String userId = '';
         try {
-            userId = Site.createExternalUser(user, accountId, password);
+            Site.createExternalUser(user, accountId, password);
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
             System.debug(LoggingLevel.INFO, 'errors: ' + errors);
