@@ -36,6 +36,8 @@ public class CommunitiesSelfRegController {
 
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
 
+        // TODO: 人材活動オブジェクトにuserIdを保存
+
         // TODO: 「初回ログイン管理している場合は、登録させないようにする」
 
         if (user != null) {

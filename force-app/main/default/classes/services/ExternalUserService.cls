@@ -1,4 +1,5 @@
 public without sharing class ExternalUserService {
+    //TODO: どうにかして、環境別で値を変更する
     static final ID accountId = '0010T00000QXufwQAD';
     static final ID profileId = '00e0T000000MS7RQAW';
 
@@ -18,9 +19,6 @@ public without sharing class ExternalUserService {
         String userId = '';
         try {
             userId = Site.createExternalUser(user, accountId, password);
-
-            // 人材活動オブジェクトにuserIdを保存
-
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
             System.debug(LoggingLevel.INFO, 'errors: ' + errors);
