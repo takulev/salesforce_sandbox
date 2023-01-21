@@ -10,54 +10,40 @@ public without sharing class ExternalUserService {
         this.talentActivityRepository = new WSTalentActivityRepository();
     }
 
-    public String createAccount(ID talentActivityId, String password, String email) {
+    public User createAccount(ID talentActivityId, String password) {
         TalentActivity__c talentActivity = this.talentActivityRepository.getById(talentActivityId);
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
-        User user = this.buildUser(talent, talentActivity, email);
+        User user = this.buildUser(talent, talentActivity);
 
         String userId = '';
-
-        System.debug(LoggingLevel.INFO, 'talentActivity: ' + talentActivity);
-        System.debug(LoggingLevel.INFO, 'talent: ' + talent);
-        // System.debug(LoggingLevel.INFO, 'user: ' + user);
-
         try {
-            System.debug(LoggingLevel.INFO, 'createExternalUser user: ' + user);
-            // userId = Site.createExternalUser(user, accountId, password);
-            userId = Site.createExternalUser(user, accountId);
-            System.debug(LoggingLevel.INFO, 'createExternalUser userId: ' + userId);
+            userId = Site.createExternalUser(user, accountId, password);
 
             // 人材活動オブジェクトにuserIdを保存
 
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
             System.debug(LoggingLevel.INFO, 'errors: ' + errors);
-            Logger.db('errors: ' + errors);
 
-            //TODO: 調査
             for (String error : errors)  {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, error));
-                Logger.db('error: ' + error);
             }
 
             System.debug(LoggingLevel.INFO, 'errors: ' + e.getMessage());
+
+            return null;
         }
 
-        return userId;
+        return user;
     }
 
-    // private User buildUser(Talent__c talent, TalentActivity__c talentActivity, ID profileId) {
-    private User buildUser(Talent__c talent, TalentActivity__c talentActivity, String email) {
+    private User buildUser(Talent__c talent, TalentActivity__c talentActivity) {
         User user = new User();
 
-        user.Username = email;
+        user.Username = talentActivity.Email__c;
         user.LastName = talent.Name;
         user.CommunityNickname = talent.Name;
-        user.Email = email;
-
-        //TODO: コメントアウト外す
-        // user.Email = 'takuya.nakamatsu+'+Datetime.now().format('yyyyMMddHMS')+'@leverages.jp';
-        // user.Email = talentActivity.Email__c;
+        user.Email = talentActivity.Email__c;
         user.ProfileId = profileId;
 
         return user;
