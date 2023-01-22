@@ -19,6 +19,8 @@ public class CommunitiesSelfRegController {
     }
 
     public PageReference registerUser() {
+        // TODO: 「初回ログイン管理している場合は、登録させないようにする」
+        
         if (!isValidPassword()) {
             ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
             ApexPages.addMessage(msg);
@@ -33,8 +35,6 @@ public class CommunitiesSelfRegController {
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
 
         // TODO: 人材活動オブジェクトにuserIdを保存
-
-        // TODO: 「初回ログイン管理している場合は、登録させないようにする」
 
         if (user != null) {
             if (password != null && password.length() > 1) {
