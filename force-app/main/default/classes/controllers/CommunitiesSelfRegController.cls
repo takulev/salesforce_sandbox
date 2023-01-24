@@ -11,8 +11,10 @@ public class CommunitiesSelfRegController {
 
     private ID talentActivityId;
     private ExternalUserService userService;
+    private MypageRepository mypageRepository;
 
     public CommunitiesSelfRegController() {
+        this.mypageRepository = new MypageRepository();
         this.userService = new ExternalUserService();
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
         this.initExId();
@@ -20,7 +22,7 @@ public class CommunitiesSelfRegController {
 
     public PageReference registerUser() {
         // TODO: 「初回ログイン管理している場合は、登録させないようにする」
-        
+
         if (!isValidPassword()) {
             ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
             ApexPages.addMessage(msg);
@@ -34,7 +36,14 @@ public class CommunitiesSelfRegController {
 
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
 
-        // TODO: 人材活動オブジェクトにuserIdを保存
+        // TODO: マイページオブジェクトにuserIdを保存
+        ID id = 'a0t0T000000jNhqQAE';
+        Map<String, Object>values = new Map<String, Object>{
+            'Name' => Datetime.now().format('yyyyMMdd mm:ss'),
+            'User__c' => UserInfo.getUserId()
+        };
+
+        this.mypageRepository.doUpdate(id, values);
 
         if (user != null) {
             if (password != null && password.length() > 1) {
