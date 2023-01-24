@@ -14,23 +14,23 @@ public with sharing virtual class MypageRepository extends BaseRepository implem
 
     protected final SObjectType objectType { get { return Mypage__c.SObjectType; } }
 
-    public MypageRepository () {
+    public MypageRepository() {
         super();
-    }
-
-    public override List<SObjectField> getFields () {
-        return this.fields;
-    }
-
-    public override SObjectField getPrimaryKey () {
-        return this.primaryKey;
-    }
-
-    public override SObjectType getObjectType () {
-        return this.objectType;
     }
 
     public virtual Mypage__c getByTalentId(ID id) {
         return (Mypage__c) super.setWhere(QueryBuilder.equals(Mypage__c.Talent__c, id)).first();
+    }
+
+    public override List<SObjectField> getFields() {
+        return this.fields;
+    }
+
+    public override SObjectType getObjectType() {
+        return this.objectType;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
     }
 }

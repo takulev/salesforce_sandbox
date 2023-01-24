@@ -1,5 +1,4 @@
-public interface MypageRepositoryInterface {
-    Mypage__c getByTalentId(ID id);
+public interface WSTalentActivityRepositoryInterface {
     List<SObjectField> getFields();
     SObjectType getObjectType();
     SObjectField getPrimaryKey();

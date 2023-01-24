@@ -12,15 +12,19 @@ public with sharing class TalentRepository extends BaseRepository implements Tal
 
     protected final SObjectField primaryKey { get { return Talent__c.Id; } }
 
-    public TalentRepository () {
+    public TalentRepository() {
         super();
     }
 
-    public override List<SObjectField> getFields () {
+    public override List<SObjectField> getFields() {
         return this.fields;
     }
 
-    public override SObjectType getObjectType () {
+    public override SObjectType getObjectType() {
         return this.objectType;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
     }
 }

@@ -12,23 +12,23 @@ public with sharing class AccountRepository extends BaseRepository implements Ac
 
     protected final SObjectType objectType { get { return Account.SObjectType; } }
 
-    public AccountRepository () {
+    public AccountRepository() {
         super();
-    }
-
-    public override List<SObjectField> getFields () {
-        return this.fields;
-    }
-
-    public override SObjectField getPrimaryKey () {
-        return this.primaryKey;
-    }
-
-    public override SObjectType getObjectType () {
-        return this.objectType;
     }
 
     public List<SObject> getAll() {
         return (List<Account>) super.get();
+    }
+
+    public override List<SObjectField> getFields() {
+        return this.fields;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
+    }
+
+    public override SObjectType getObjectType() {
+        return this.objectType;
     }
 }

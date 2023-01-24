@@ -15,15 +15,19 @@ public with sharing virtual class TalentActivityRepository extends BaseRepositor
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 
-    public TalentActivityRepository () {
+    public TalentActivityRepository() {
         super();
     }
 
-    public override List<SObjectField> getFields () {
+    public override List<SObjectField> getFields() {
         return this.fields;
     }
 
-    public override SObjectType getObjectType () {
+    public override SObjectType getObjectType() {
         return this.objectType;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
     }
 }

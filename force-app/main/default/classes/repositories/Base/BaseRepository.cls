@@ -9,7 +9,7 @@ public without sharing virtual class BaseRepository {
     private String whereClause = null;
     private List<SObjectField> selectClause = null;
 
-    public BaseRepository () {
+    public BaseRepository() {
         this.dml = new Dml();
         this.primaryKey = this.getPrimaryKey();
         this.fields = this.getFields();
@@ -17,10 +17,6 @@ public without sharing virtual class BaseRepository {
     }
     //TODO: 下記の記事も参考にロジックを見直す
     //https://developer.salesforce.com/docs/atlas.ja-jp.pages.meta/pages/pages_dynamic_vf_globals_objecttype.htm
-
-    public SObject getById(ID id) {
-        return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
-    }
 
     public SObject first() {
         setLimit(1);
@@ -30,6 +26,10 @@ public without sharing virtual class BaseRepository {
 
     public List<SObject> get() {
         return this.execute(this.buildQuery());
+    }
+
+    public SObject getById(ID id) {
+        return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
     }
 
     public virtual List<SObjectField> getFields () {

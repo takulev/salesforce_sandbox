@@ -12,15 +12,19 @@ public without sharing class WSTalentRepository extends BaseRepository implement
 
     protected final SObjectType objectType { get { return Talent__c.SObjectType; } }
 
-    public WSTalentRepository () {
+    public WSTalentRepository() {
         super();
     }
 
-    public override List<SObjectField> getFields () {
+    public override List<SObjectField> getFields() {
         return this.fields;
     }
 
-    public override SObjectType getObjectType () {
+    public override SObjectType getObjectType() {
         return this.objectType;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
     }
 }

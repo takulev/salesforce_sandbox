@@ -3,7 +3,7 @@
  *
  * MEMO: 共有ルールを適用できないためTalentActivityRepositoryクラスと切り離して作成.
  */
-public without sharing virtual class WSTalentActivityRepository extends BaseRepository implements WShTalentActivityRepositoryInterface {
+public without sharing virtual class WSTalentActivityRepository extends BaseRepository implements WSTalentActivityRepositoryInterface {
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
@@ -20,15 +20,19 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 
-    public WSTalentActivityRepository () {
+    public WSTalentActivityRepository() {
         super();
     }
 
-    public override List<SObjectField> getFields () {
+    public override List<SObjectField> getFields() {
         return this.fields;
     }
 
-    public override SObjectType getObjectType () {
+    public override SObjectType getObjectType() {
         return this.objectType;
+    }
+
+    public override SObjectField getPrimaryKey() {
+        return this.primaryKey;
     }
 }
