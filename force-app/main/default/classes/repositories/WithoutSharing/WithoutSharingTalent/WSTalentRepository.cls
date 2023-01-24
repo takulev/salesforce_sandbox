@@ -2,11 +2,13 @@ public without sharing class WSTalentRepository extends BaseRepository implement
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
-                Talent__c.Id,
+                this.primaryKey,
                 Talent__c.Name
             };
         }
     }
+
+    protected final SObjectField primaryKey { get { return Mypage__c.Id; } }
 
     protected final SObjectType objectType { get { return Talent__c.SObjectType; } }
 
@@ -21,13 +23,4 @@ public without sharing class WSTalentRepository extends BaseRepository implement
     public override SObjectType getObjectType () {
         return this.objectType;
     }
-
-    public Talent__c getById(ID id) {
-        return (Talent__c) super.setWhere(QueryBuilder.equals(Talent__c.Id, id)).first();
-    }
-
-    //TODO: オブジェクトの項目までアクセス権限を判定すべきか検討する
-    // private Boolean isAccessible() {
-    //     return Talent__c.SObjectType.getDescribe().isAccessible();
-    // }
 }

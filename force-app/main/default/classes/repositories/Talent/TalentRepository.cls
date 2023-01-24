@@ -2,13 +2,15 @@ public with sharing class TalentRepository extends BaseRepository implements Tal
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
-                Talent__c.Id,
+                this.primaryKey,
                 Talent__c.Name
             };
         }
     }
 
     protected final SObjectType objectType { get { return Talent__c.SObjectType; } }
+
+    protected final SObjectField primaryKey { get { return Talent__c.Id; } }
 
     public TalentRepository () {
         super();
@@ -21,13 +23,4 @@ public with sharing class TalentRepository extends BaseRepository implements Tal
     public override SObjectType getObjectType () {
         return this.objectType;
     }
-
-    public Talent__c getById(ID id) {
-        return (Talent__c) super.setWhere(QueryBuilder.equals(Talent__c.Id, id)).first();
-    }
-
-    //TODO: オブジェクトの項目までアクセス権限を判定すべきか検討する
-    // private Boolean isAccessible() {
-    //     return Talent__c.SObjectType.getDescribe().isAccessible();
-    // }
 }

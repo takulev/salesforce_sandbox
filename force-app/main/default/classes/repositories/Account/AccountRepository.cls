@@ -2,11 +2,13 @@ public with sharing class AccountRepository extends BaseRepository implements Ac
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
-                Account.Id,
+                this.primaryKey,
                 Account.Name
             };
         }
     }
+
+    protected final SObjectField primaryKey { get { return Account.Id; } }
 
     protected final SObjectType objectType { get { return Account.SObjectType; } }
 
@@ -18,6 +20,10 @@ public with sharing class AccountRepository extends BaseRepository implements Ac
         return this.fields;
     }
 
+    public override SObjectField getPrimaryKey () {
+        return this.primaryKey;
+    }
+
     public override SObjectType getObjectType () {
         return this.objectType;
     }
@@ -25,13 +31,4 @@ public with sharing class AccountRepository extends BaseRepository implements Ac
     public List<SObject> getAll() {
         return (List<Account>) super.get();
     }
-
-    public Account getById(ID id) {
-        return (Account) super.setWhere(QueryBuilder.equals(Account.Id, id)).first();
-    }
-
-    //TODO: オブジェクトの項目までアクセス権限を判定すべきか検討する
-    // private Boolean isAccessible() {
-    //     return Account.SObjectType.getDescribe().isAccessible();
-    // }
 }

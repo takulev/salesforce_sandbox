@@ -1,6 +1,7 @@
 public without sharing virtual class BaseRepository {
     public Dml dml;
     protected List<SObjectField> fields;
+    protected SObjectField primaryKey;
     protected SObjectType objectType;
 
     private String limitClause = null;
@@ -10,11 +11,16 @@ public without sharing virtual class BaseRepository {
 
     public BaseRepository () {
         this.dml = new Dml();
+        this.primaryKey = this.getPrimaryKey();
         this.fields = this.getFields();
         this.objectType = this.getObjectType();
     }
     //TODO: 下記の記事も参考にロジックを見直す
     //https://developer.salesforce.com/docs/atlas.ja-jp.pages.meta/pages/pages_dynamic_vf_globals_objecttype.htm
+
+    public SObject getById(ID id) {
+        return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
+    }
 
     public SObject first() {
         setLimit(1);
@@ -28,6 +34,10 @@ public without sharing virtual class BaseRepository {
 
     public virtual List<SObjectField> getFields () {
         return this.fields;
+    }
+
+    public virtual SObjectField getPrimaryKey () {
+        return this.primaryKey;
     }
 
     public virtual SObjectType getObjectType () {
@@ -91,11 +101,21 @@ public without sharing virtual class BaseRepository {
         return this.dml.doInsert(records);
     }
 
-    public SObject doUpdate(SObject record) {
+    public void doUpdate(ID id, Map<String, Object> values) {
+        SObject record = this.getById(id);
+
+        for (String field : values.keySet()) {
+            record.put(field, values.get(field));
+        }
+
+        this.doUpdate(record);
+    }
+
+    public virtual SObject doUpdate(SObject record) {
         return this.dml.doUpdate(record);
     }
 
-    public List<SObject> doUpdate(List<SObject> records) {
+    public virtual List<SObject> doUpdate(List<SObject> records) {
         return this.dml.doUpdate(records);
     }
 

@@ -7,7 +7,7 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{
-                TalentActivity__c.Id,
+                this.primaryKey,
                 TalentActivity__c.TalentName__c,
                 TalentActivity__c.Name,
                 TalentActivity__c.Email__c,
@@ -15,6 +15,8 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
             };
         }
     }
+
+    protected final SObjectField primaryKey { get { return Mypage__c.Id; } }
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 
@@ -28,9 +30,5 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
 
     public override SObjectType getObjectType () {
         return this.objectType;
-    }
-
-    public virtual TalentActivity__c getById(ID id) {
-        return (TalentActivity__c) super.setWhere(QueryBuilder.equals(TalentActivity__c.Id, id)).first();
     }
 }
