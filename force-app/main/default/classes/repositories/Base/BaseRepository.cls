@@ -101,14 +101,14 @@ public without sharing virtual class BaseRepository {
         return this.dml.doInsert(records);
     }
 
-    public void doUpdate(ID id, Map<String, Object> values) {
+    public virtual SObject doUpdate(ID id, Map<String, Object> values) {
         SObject record = this.getById(id);
 
         for (String field : values.keySet()) {
             record.put(field, values.get(field));
         }
 
-        this.doUpdate(record);
+        return this.doUpdate(record);
     }
 
     public virtual SObject doUpdate(SObject record) {
