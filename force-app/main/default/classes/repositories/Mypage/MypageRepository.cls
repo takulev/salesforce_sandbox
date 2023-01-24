@@ -18,8 +18,8 @@ public with sharing virtual class MypageRepository extends BaseRepository implem
         super();
     }
 
-    public virtual Mypage__c getByTalentId(ID id) {
-        return (Mypage__c) super.setWhere(QueryBuilder.equals(Mypage__c.Talent__c, id)).first();
+    public virtual Mypage__c getByUserId(ID id) {
+        return (Mypage__c) super.setWhere(QueryBuilder.equals(Mypage__c.User__c, id)).first();
     }
 
     public override List<SObjectField> getFields() {

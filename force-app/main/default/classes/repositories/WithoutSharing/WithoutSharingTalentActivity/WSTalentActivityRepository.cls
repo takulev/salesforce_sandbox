@@ -24,6 +24,10 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
         super();
     }
 
+    public TalentActivity__c getById(ID id) {
+        return (TalentActivity__c) super.find(id);
+    }
+
     public override List<SObjectField> getFields() {
         return this.fields;
     }

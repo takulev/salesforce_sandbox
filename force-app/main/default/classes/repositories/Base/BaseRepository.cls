@@ -28,7 +28,7 @@ public without sharing virtual class BaseRepository {
         return this.execute(this.buildQuery());
     }
 
-    public SObject getById(ID id) {
+    public virtual SObject find(ID id) {
         return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
     }
 
@@ -102,7 +102,7 @@ public without sharing virtual class BaseRepository {
     }
 
     public virtual SObject doUpdate(ID id, Map<String, Object> values) {
-        SObject record = this.getById(id);
+        SObject record = find(id);
 
         for (String field : values.keySet()) {
             record.put(field, values.get(field));

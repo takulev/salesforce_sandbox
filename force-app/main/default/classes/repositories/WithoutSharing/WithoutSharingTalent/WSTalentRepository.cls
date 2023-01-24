@@ -16,6 +16,10 @@ public without sharing class WSTalentRepository extends BaseRepository implement
         super();
     }
 
+    public Talent__c getById(ID id) {
+        return (Talent__c) super.find(id);
+    }
+
     public override List<SObjectField> getFields() {
         return this.fields;
     }
