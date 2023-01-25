@@ -4,8 +4,8 @@ public with sharing class GetLeadIdByUserId {
         List<GetLeadIdByUserIdResponse> responses = new List<GetLeadIdByUserIdResponse>();
         GetLeadIdByUserIdResponse response = new GetLeadIdByUserIdResponse();
 
-        Mypage__c mypage = (new MypageRepository()).getByUserId(UserInfo.getUserId());
-        Lead lead = (new LeadRepository()).getByTalentId(mypage.Talent__c);
+        ExternalUser__c user = (new ExternalUserRepository()).getByUserId(UserInfo.getUserId());
+        Lead lead = (new LeadRepository()).getByTalentId(user.Talent__c);
 
         response.leadId = lead.Id;
         responses.add(response);

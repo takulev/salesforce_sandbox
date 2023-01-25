@@ -8,14 +8,14 @@ public class CommunitiesSelfRegController {
     public String password {get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword {get; set { confirmPassword = value == null ? value : value.trim(); } }
 
-    private MypageRepository mypageRepository;
+    private ExternalUserRepository userRepository;
     private ID talentActivityId;
     private WSTalentRepository talentRepository;
     private WSTalentActivityRepository talentActivityRepository;
     private ExternalUserService userService;
 
     public CommunitiesSelfRegController() {
-        this.mypageRepository = new MypageRepository();
+        this.userRepository = new ExternalUserRepository();
         this.userService = new ExternalUserService();
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
         this.talentRepository = new WSTalentRepository();
@@ -42,7 +42,7 @@ public class CommunitiesSelfRegController {
         );
 
         // TODO: オブジェクト名をExternalUserへ変更
-        this.mypageRepository.doInsert(new Map<String, Object>{
+        this.userRepository.doInsert(new Map<String, Object>{
             'Name' => user.LastName,
             'User__c' => user.Id,
             'Talent__c' => talent.Id
