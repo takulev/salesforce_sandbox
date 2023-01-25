@@ -11,7 +11,7 @@ public with sharing virtual class TalentActivityRepository extends BaseRepositor
         }
     }
 
-    protected final SObjectField primaryKey { get { return Mypage__c.Id; } }
+    protected final SObjectField primaryKey { get { return TalentActivity__c.Id; } }
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 

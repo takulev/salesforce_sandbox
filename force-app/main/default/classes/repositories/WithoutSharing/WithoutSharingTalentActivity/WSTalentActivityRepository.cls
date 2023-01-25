@@ -16,7 +16,7 @@ public without sharing virtual class WSTalentActivityRepository extends BaseRepo
         }
     }
 
-    protected final SObjectField primaryKey { get { return Mypage__c.Id; } }
+    protected final SObjectField primaryKey { get { return TalentActivity__c.Id; } }
 
     protected final SObjectType objectType { get { return TalentActivity__c.SObjectType; } }
 
