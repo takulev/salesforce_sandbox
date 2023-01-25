@@ -7,16 +7,20 @@ public class CommunitiesSelfRegController {
      */
     public String password {get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword {get; set { confirmPassword = value == null ? value : value.trim(); } }
-    public String communityNickname {get; set { communityNickname = value == null ? value : value.trim(); } }
 
-    private ID talentActivityId;
-    private ExternalUserService userService;
     private MypageRepository mypageRepository;
+    private ID talentActivityId;
+    private WSTalentRepository talentRepository;
+    private WSTalentActivityRepository talentActivityRepository;
+    private ExternalUserService userService;
 
     public CommunitiesSelfRegController() {
         this.mypageRepository = new MypageRepository();
         this.userService = new ExternalUserService();
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
+        this.talentRepository = new WSTalentRepository();
+        this.talentActivityRepository = new WSTalentActivityRepository();
+
         this.initExId();
     }
 
@@ -29,21 +33,22 @@ public class CommunitiesSelfRegController {
             return null;
         }
 
+        TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
+        Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
+
         User user = this.userService.createAccount(
-            this.talentActivityId,
+            this.userService.buildUser(talent, talentActivity),
             password
         );
 
+        // TODO: オブジェクト名をExternalUserへ変更
+        this.mypageRepository.doInsert(new Map<String, Object>{
+            'Name' => user.LastName,
+            'User__c' => user.Id,
+            'Talent__c' => talent.Id
+        });
+
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
-
-        // TODO: マイページオブジェクトにuserIdを保存
-        ID id = 'a0t0T000000jNhqQAE';
-        Map<String, Object>values = new Map<String, Object>{
-            'Name' => Datetime.now().format('yyyyMMdd mm:ss'),
-            'User__c' => UserInfo.getUserId()
-        };
-
-        this.mypageRepository.doUpdate(id, values);
 
         if (user != null) {
             if (password != null && password.length() > 1) {
