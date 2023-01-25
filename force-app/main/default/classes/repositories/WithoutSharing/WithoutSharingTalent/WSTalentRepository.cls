@@ -8,7 +8,7 @@ public without sharing class WSTalentRepository extends BaseRepository implement
         }
     }
 
-    protected final SObjectField primaryKey { get { return Mypage__c.Id; } }
+    protected final SObjectField primaryKey { get { return Talent__c.Id; } }
 
     protected final SObjectType objectType { get { return Talent__c.SObjectType; } }
 
