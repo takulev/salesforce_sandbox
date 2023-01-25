@@ -1,4 +1,4 @@
-public with sharing virtual class ExternalUserRepository extends BaseRepository implements ExternalUserRepositoryInterface {
+public without sharing virtual class ExternalUserRepository extends BaseRepository implements ExternalUserRepositoryInterface {
     protected final List<SObjectField> fields {
         get {
             return new List<SObjectField>{

@@ -41,7 +41,6 @@ public class CommunitiesSelfRegController {
             password
         );
 
-        // TODO: オブジェクト名をExternalUserへ変更
         this.userRepository.doInsert(new Map<String, Object>{
             'Name' => user.LastName,
             'User__c' => user.Id,
