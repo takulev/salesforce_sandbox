@@ -16,6 +16,8 @@
                    <apex:param value="{!$Site.ErrorMessage}"/>
                    <!-- this parameter needs to be italic in the site.error label -->
                   </apex:outputText>
+                  <p>エラーが発生しました。お急ぎの方は下記のメールアドレスにお問い合わせください。</p>
+                  <p>メールアドレス：<a href="mailto:mexico_support@leverages.jp">mexico_support@leverages.jp</a></p>
                   <br/>
                   <br/>
                 </apex:panelGroup>

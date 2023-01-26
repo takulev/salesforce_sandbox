@@ -35,26 +35,33 @@ public class CommunitiesSelfRegController {
         TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
 
-        // TODO: config内でフロー名を管理
-        Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
-        flow.start();
+        User user;
+        try {
+            // TODO: config内でフロー名を管理
+            Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
+            flow.start();
 
-        ID accountId = (ID) flow.getVariableValue('varAccountId');
-        ID profileId = (ID) flow.getVariableValue('varProfileId');
+            ID accountId = (ID) flow.getVariableValue('varAccountId');
+            ID profileId = (ID) flow.getVariableValue('varProfileId');
 
-        //TODO: try catch
+            user = this.userService.createAccount(
+                this.userService.buildUser(talent, talentActivity, profileId),
+                accountId,
+                password
+            );
 
-        User user = this.userService.createAccount(
-            this.userService.buildUser(talent, talentActivity, profileId),
-            accountId,
-            password
-        );
+            this.userRepository.doInsert(new Map<String, Object>{
+                'Name' => user.LastName,
+                'User__c' => user.Id,
+                'Talent__c' => talent.Id
+            });
+        } catch (Exception e) {
+            PageReference page = System.Page.Exception;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO,'メッセージがきました'));
+            page.setRedirect(true);
+            return page;
+        }
 
-        this.userRepository.doInsert(new Map<String, Object>{
-            'Name' => user.LastName,
-            'User__c' => user.Id,
-            'Talent__c' => talent.Id
-        });
 
         // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
 
