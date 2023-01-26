@@ -57,7 +57,6 @@ public class CommunitiesSelfRegController {
             });
         } catch (Exception e) {
             PageReference page = System.Page.Exception;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO,'メッセージがきました'));
             page.setRedirect(true);
             return page;
         }
