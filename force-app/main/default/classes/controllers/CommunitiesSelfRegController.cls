@@ -15,11 +15,27 @@ public class CommunitiesSelfRegController {
     private ExternalUserRepository userRepository;
 
     public CommunitiesSelfRegController() {
-        this.userRepository = new ExternalUserRepository();
-        this.userService = new ExternalUserService();
-        this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
-        this.talentRepository = new WSTalentRepository();
-        this.talentActivityRepository = new WSTalentActivityRepository();
+        this(
+            new ExternalUserRepository(),
+            new ExternalUserService(),
+            (ID) ApexPages.currentPage().getParameters().get('taid'),
+            new WSTalentRepository(),
+            new WSTalentActivityRepository()
+        );
+    }
+
+    public CommunitiesSelfRegController(
+        ExternalUserRepository userRepository,
+        ExternalUserService userService,
+        ID talentActivityId,
+        WSTalentRepository talentRepository,
+        WSTalentActivityRepository talentActivityRepository
+    ) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.talentActivityId = talentActivityId;
+        this.talentRepository = talentRepository;
+        this.talentActivityRepository = talentActivityRepository;
         this.initExId();
     }
 
@@ -55,26 +71,15 @@ public class CommunitiesSelfRegController {
                 'User__c' => user.Id,
                 'Talent__c' => talent.Id
             });
+
+            // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
         } catch (Exception e) {
             PageReference page = System.Page.Exception;
             page.setRedirect(true);
             return page;
         }
 
-
-        // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
-
-        if (user != null) {
-            if (password != null && password.length() > 1) {
-                return Site.login(user.userName, password, ApexPages.currentPage().getParameters().get('startURL'));
-            } else {
-                PageReference page = System.Page.CommunitiesSelfRegConfirm;
-                page.setRedirect(true);
-                return page;
-            }
-        }
-
-        return null;
+        return Site.login(user.userName, password, ApexPages.currentPage().getParameters().get('startURL'));
     }
 
     private boolean isValidPassword() {
