@@ -35,7 +35,7 @@ public class CommunitiesSelfRegController {
         TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
 
-        // - config内で、フロー名を管理するなどをする
+        // TODO: config内でフロー名を管理
         Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
         flow.start();
 
