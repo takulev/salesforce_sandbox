@@ -8,11 +8,11 @@ public class CommunitiesSelfRegController {
     public String password {get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword {get; set { confirmPassword = value == null ? value : value.trim(); } }
 
-    private ExternalUserRepository userRepository;
     private ID talentActivityId;
     private WSTalentRepository talentRepository;
     private WSTalentActivityRepository talentActivityRepository;
     private ExternalUserService userService;
+    private ExternalUserRepository userRepository;
 
     public CommunitiesSelfRegController() {
         this.userRepository = new ExternalUserRepository();
@@ -20,7 +20,6 @@ public class CommunitiesSelfRegController {
         this.talentActivityId = (ID) ApexPages.currentPage().getParameters().get('taid');
         this.talentRepository = new WSTalentRepository();
         this.talentActivityRepository = new WSTalentActivityRepository();
-
         this.initExId();
     }
 
@@ -36,8 +35,18 @@ public class CommunitiesSelfRegController {
         TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
         Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
 
+        // - config内で、フロー名を管理するなどをする
+        Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
+        flow.start();
+
+        ID accountId = (ID) flow.getVariableValue('varAccountId');
+        ID profileId = (ID) flow.getVariableValue('varProfileId');
+
+        //TODO: try catch
+
         User user = this.userService.createAccount(
-            this.userService.buildUser(talent, talentActivity),
+            this.userService.buildUser(talent, talentActivity, profileId),
+            accountId,
             password
         );
 
