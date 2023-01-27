@@ -2,9 +2,6 @@
  * An apex page controller that supports self registration of users in communities that allow self registration
  */
 public class CommunitiesSelfRegController {
-    /**
-     * Form Field.
-     */
     public String password { get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword { get; set { confirmPassword = value == null ? value : value.trim(); } }
 
@@ -39,7 +36,7 @@ public class CommunitiesSelfRegController {
             TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
             Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
 
-            // TODO: config内でフロー名を管理
+            // FIXME: config内でフロー名を管理
             Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
             flow.start();
 
@@ -48,15 +45,16 @@ public class CommunitiesSelfRegController {
             ID profileId = (ID) flow.getVariableValue('varProfileId');
 
             user = this.buildUser(talent, talentActivity, profileId);
-            user.Id = Site.createExternalUser(user, accountId, password);
+            ID userId = Site.createExternalUser(user, accountId, password);
 
-            this.userRepository.doInsert(new Map<String, Object>{
+            ExternalUser__c externalUser = this.userRepository.doInsert(new Map<String, Object>{
                 'Name' => user.LastName,
-                'User__c' => user.Id,
-                'Talent__c' => talent.Id
+                'User__c' => userId
             });
 
-            // TODO: 人材活動オブジェクトに「アカウント作成後の初ログイン済み」判定項目を設ける
+            this.talentRepository.doUpdate(talent.Id, new Map<String, Object>{
+                'ExternalUser__c' => externalUser.Id
+            });
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
             for (String error : errors)  {
