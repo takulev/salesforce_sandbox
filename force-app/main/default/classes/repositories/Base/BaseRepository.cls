@@ -32,15 +32,15 @@ public without sharing virtual class BaseRepository {
         return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
     }
 
-    public virtual List<SObjectField> getFields () {
+    public virtual List<SObjectField> getFields() {
         return this.fields;
     }
 
-    public virtual SObjectField getPrimaryKey () {
+    public virtual SObjectField getPrimaryKey() {
         return this.primaryKey;
     }
 
-    public virtual SObjectType getObjectType () {
+    public virtual SObjectType getObjectType() {
         return this.objectType;
     }
 
@@ -195,11 +195,11 @@ public without sharing virtual class BaseRepository {
       }
 
     private List<SObject> execute(String finalQuery) {
-        // System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
+        System.debug(LoggingLevel.INFO, 'Query: \n' + finalQuery);
 
         List<SObject> results = Database.query(finalQuery);
 
-        // System.debug(LoggingLevel.INFO, 'Results: \n' + results);
+        System.debug(LoggingLevel.INFO, 'Results: \n' + results);
 
         return results;
     }
