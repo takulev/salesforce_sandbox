@@ -1,3 +1,4 @@
+// NOTE: 現在使用されてないライブラリのコードはコメントアウト。（コメントアウトなしだと、テストコードが必要なため）
 public without sharing virtual class BaseRepository {
     public Dml dml;
     protected List<SObjectField> fields;
@@ -24,9 +25,9 @@ public without sharing virtual class BaseRepository {
         return this.execute(this.buildQuery())[0];
     }
 
-    public List<SObject> get() {
-        return this.execute(this.buildQuery());
-    }
+    // public List<SObject> get() {
+    //     return this.execute(this.buildQuery());
+    // }
 
     public virtual SObject find(ID id) {
         return this.setWhere(QueryBuilder.equals(this.primaryKey, id)).first();
@@ -50,38 +51,38 @@ public without sharing virtual class BaseRepository {
         return this;
     }
 
-    public BaseRepository setOrderBy(SObjectField field, String direction) {
-        return this.setOrderBy(new List<SObjectField>{ field }, direction);
-    }
+    // public BaseRepository setOrderBy(SObjectField field, String direction) {
+    //     return this.setOrderBy(new List<SObjectField>{ field }, direction);
+    // }
 
-    public BaseRepository setOrderBy(List<SObjectField> fields, String direction) {
-        Set<String> sortString = new Set<String>();
+    // public BaseRepository setOrderBy(List<SObjectField> fields, String direction) {
+    //     Set<String> sortString = new Set<String>();
 
-        for (SObjectField field : fields) {
-            sortString.add(field.getDescribe().getName());
-        }
+    //     for (SObjectField field : fields) {
+    //         sortString.add(field.getDescribe().getName());
+    //     }
 
-        if(direction == null) {
-            //FIXME: ENUMにしたいが、ASCが予約語のため使用できないため、一旦文字列で代用。
-            direction = 'ASC';
+    //     if(direction == null) {
+    //         //FIXME: ENUMにしたいが、ASCが予約語のため使用できないため、一旦文字列で代用。
+    //         direction = 'ASC';
 
-            //TODO: ENUMの代わりにException作成
-        }
+    //         //TODO: ENUMの代わりにException作成
+    //     }
 
-        this.sortClause = ' ORDER BY ' + String.join(new List<String>(sortString), ', ') + ' ' + direction;
+    //     this.sortClause = ' ORDER BY ' + String.join(new List<String>(sortString), ', ') + ' ' + direction;
 
-        return this;
-    }
+    //     return this;
+    // }
 
-    public BaseRepository setSelector(SObjectField selector) {
-        return this.setSelector(new List<SObjectField>{ selector });
-    }
+    // public BaseRepository setSelector(SObjectField selector) {
+    //     return this.setSelector(new List<SObjectField>{ selector });
+    // }
 
-    public BaseRepository setSelector(List<SObjectField> selector) {
-        this.selectClause = selector;
+    // public BaseRepository setSelector(List<SObjectField> selector) {
+    //     this.selectClause = selector;
 
-        return this;
-    }
+    //     return this;
+    // }
 
     public BaseRepository setWhere(QueryBuilder query) {
         return this.setWhere(new List<QueryBuilder>{ query });
@@ -97,9 +98,9 @@ public without sharing virtual class BaseRepository {
         return this.dml.doInsert(record);
     }
 
-    public List<SObject> doInsert(List<SObject> records) {
-        return this.dml.doInsert(records);
-    }
+    // public List<SObject> doInsert(List<SObject> records) {
+    //     return this.dml.doInsert(records);
+    // }
 
     public virtual SObject doUpdate(ID id, Map<String, Object> values) {
         SObject record = find(id);
@@ -115,45 +116,45 @@ public without sharing virtual class BaseRepository {
         return this.dml.doUpdate(record);
     }
 
-    public virtual List<SObject> doUpdate(List<SObject> records) {
-        return this.dml.doUpdate(records);
-    }
+    // public virtual List<SObject> doUpdate(List<SObject> records) {
+    //     return this.dml.doUpdate(records);
+    // }
 
-    public SObject doUpsert(SObject record) {
-        return this.dml.doUpsert(record);
-    }
+    // public SObject doUpsert(SObject record) {
+    //     return this.dml.doUpsert(record);
+    // }
 
-    public List<SObject> doUpsert(List<SObject> records) {
-        return this.dml.doUpsert(records);
-    }
+    // public List<SObject> doUpsert(List<SObject> records) {
+    //     return this.dml.doUpsert(records);
+    // }
 
-    public List<SObject> doUpsert(List<SObject> records, Schema.SObjectField field) {
-        return this.dml.doUpsert(records, field);
-    }
+    // public List<SObject> doUpsert(List<SObject> records, Schema.SObjectField field) {
+    //     return this.dml.doUpsert(records, field);
+    // }
 
-    public SObject doUndelete(SObject record) {
-        return this.dml.doUnDelete(record);
-    }
+    // public SObject doUndelete(SObject record) {
+    //     return this.dml.doUnDelete(record);
+    // }
 
-    public List<SObject> doUndelete(List<SObject> records) {
-        return this.dml.doUndelete(records);
-    }
+    // public List<SObject> doUndelete(List<SObject> records) {
+    //     return this.dml.doUndelete(records);
+    // }
 
-    public void doDelete(SObject record) {
-        this.dml.doDelete(record);
-    }
+    // public void doDelete(SObject record) {
+    //     this.dml.doDelete(record);
+    // }
 
-    public void doDelete(List<SObject> records) {
-        this.dml.doDelete(records);
-    }
+    // public void doDelete(List<SObject> records) {
+    //     this.dml.doDelete(records);
+    // }
 
-    public void doHardDelete(SObject record) {
-        this.dml.doHardDelete(record);
-    }
+    // public void doHardDelete(SObject record) {
+    //     this.dml.doHardDelete(record);
+    // }
 
-    public void doHardDelete(List<SObject> records) {
-        this.dml.doHardDelete(records);
-    }
+    // public void doHardDelete(List<SObject> records) {
+    //     this.dml.doHardDelete(records);
+    // }
 
     private String buildQuery() {
         String queryString = 'SELECT ' + this.getSelector() + ' FROM ' + this.objectType;

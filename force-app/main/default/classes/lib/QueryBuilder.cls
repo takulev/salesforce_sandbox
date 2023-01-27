@@ -1,3 +1,4 @@
+// NOTE: 現在使用されてないライブラリのコードはコメントアウト。（コメントアウトなしだと、テストコードが必要なため）
 public virtual class QueryBuilder {
   private enum Operator {
     EQUALS,
@@ -26,92 +27,92 @@ public virtual class QueryBuilder {
     return new QueryBuilder(field, Operator.EQUALS, predicates);
   }
 
-  public static QueryBuilder notEquals(SObjectField field, Object predicate) {
-    return notEquals(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder notEquals(SObjectField field, Object predicate) {
+  //   return notEquals(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder notEquals(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.NOT_EQUALS, predicates);
-  }
+  // public static QueryBuilder notEquals(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.NOT_EQUALS, predicates);
+  // }
 
-  public static QueryBuilder lessThan(SObjectField field, Object predicate) {
-    return lessThan(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder lessThan(SObjectField field, Object predicate) {
+  //   return lessThan(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder lessThan(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.LESS_THAN, predicates);
-  }
+  // public static QueryBuilder lessThan(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.LESS_THAN, predicates);
+  // }
 
-  public static QueryBuilder lessThanOrEqual(SObjectField field, Object predicate) {
-    return lessThanOrEqual(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder lessThanOrEqual(SObjectField field, Object predicate) {
+  //   return lessThanOrEqual(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder lessThanOrEqual(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.LESS_THAN_OR_EQUAL, predicates);
-  }
+  // public static QueryBuilder lessThanOrEqual(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.LESS_THAN_OR_EQUAL, predicates);
+  // }
 
-  public static QueryBuilder greaterThan(SObjectField field, Object predicate) {
-    return greaterThan(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder greaterThan(SObjectField field, Object predicate) {
+  //   return greaterThan(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder greaterThan(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.GREATER_THAN, predicates);
-  }
+  // public static QueryBuilder greaterThan(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.GREATER_THAN, predicates);
+  // }
 
-  public static QueryBuilder greaterThanOrEqual(SObjectField field, Object predicate) {
-    return greaterThanOrEqual(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder greaterThanOrEqual(SObjectField field, Object predicate) {
+  //   return greaterThanOrEqual(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder greaterThanOrEqual(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.GREATER_THAN_OR_EQUAL, predicates);
-  }
+  // public static QueryBuilder greaterThanOrEqual(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.GREATER_THAN_OR_EQUAL, predicates);
+  // }
 
-  // like is a reserved keyword
-  public static QueryBuilder likeQuery(SObjectField field, Object predicate) {
-    return likeQuery(field, new List<Object>{ predicate });
-  }
+  // // like is a reserved keyword
+  // public static QueryBuilder likeQuery(SObjectField field, Object predicate) {
+  //   return likeQuery(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder likeQuery(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.ALIKE, predicates);
-  }
+  // public static QueryBuilder likeQuery(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.ALIKE, predicates);
+  // }
 
-  public static QueryBuilder notLike(SObjectField field, Object predicate) {
-    return notLike(field, new List<Object>{ predicate });
-  }
+  // public static QueryBuilder notLike(SObjectField field, Object predicate) {
+  //   return notLike(field, new List<Object>{ predicate });
+  // }
 
-  public static QueryBuilder notLike(SObjectField field, List<Object> predicates) {
-    return new QueryBuilder(field, Operator.NOT_LIKE, predicates);
-  }
+  // public static QueryBuilder notLike(SObjectField field, List<Object> predicates) {
+  //   return new QueryBuilder(field, Operator.NOT_LIKE, predicates);
+  // }
 
-  // or is a reserved keyword
-  public static QueryBuilder orQueryBuilder(QueryBuilder innerQuery, QueryBuilder secondInnerQuery) {
-    return orQueryBuilder(new List<QueryBuilder>{ innerQuery, secondInnerQuery });
-  }
+  // // or is a reserved keyword
+  // public static QueryBuilder orQueryBuilder(QueryBuilder innerQuery, QueryBuilder secondInnerQuery) {
+  //   return orQueryBuilder(new List<QueryBuilder>{ innerQuery, secondInnerQuery });
+  // }
 
-  public static QueryBuilder orQueryBuilder(List<QueryBuilder> innerQueries) {
-    return new OrQueryBuilder(innerQueries);
-  }
+  // public static QueryBuilder orQueryBuilder(List<QueryBuilder> innerQueries) {
+  //   return new OrQueryBuilder(innerQueries);
+  // }
 
-  private class OrQueryBuilder extends QueryBuilder {
-    private final List<QueryBuilder> queries;
-    private final String orDelimiter = ' OR ';
+  // private class OrQueryBuilder extends QueryBuilder {
+  //   private final List<QueryBuilder> queries;
+  //   private final String orDelimiter = ' OR ';
 
-    public OrQueryBuilder(List<QueryBuilder> queries) {
-      this.queries = queries;
-    }
+  //   public OrQueryBuilder(List<QueryBuilder> queries) {
+  //     this.queries = queries;
+  //   }
 
-    public override String toString() {
-      String baseString = '(';
-      for (QueryBuilder innerQuery : this.queries) {
-        baseString += innerQuery.toString() + this.orDelimiter;
-      }
+  //   public override String toString() {
+  //     String baseString = '(';
+  //     for (QueryBuilder innerQuery : this.queries) {
+  //       baseString += innerQuery.toString() + this.orDelimiter;
+  //     }
 
-      return baseString.removeEnd(this.orDelimiter) + ')';
-    }
-  }
+  //     return baseString.removeEnd(this.orDelimiter) + ')';
+  //   }
+  // }
 
-  protected QueryBuilder() {
-  }
+  // protected QueryBuilder() {
+  // }
 
   private QueryBuilder(SObjectField field, Operator operator, List<Object> predicates) {
     this.field = field;
@@ -119,35 +120,36 @@ public virtual class QueryBuilder {
     this.predicates = predicates;
   }
 
-  public List<Object> getBindVars() {
-    return this.predicates;
-  }
+  // public List<Object> getBindVars() {
+  //   return this.predicates;
+  // }
 
   public virtual override String toString() {
     String fieldName = this.field.getDescribe().getName();
     String predicateValue = this.getPredicate(this.predicates);
     this.isIterable = this.isIterable || this.predicates.size() > 1;
-    if (this.operator == QueryBuilder.Operator.NOT_LIKE) {
-      String endingString = ' ' + (this.isIterable ? ':bindVar' : predicateValue);
-      // who knows why this is the format they wanted
-      return String.format(this.getOperator(), new List<String>{ fieldName }) + endingString;
-    }
+
+    // if (this.operator == QueryBuilder.Operator.NOT_LIKE) {
+    //   String endingString = ' ' + (this.isIterable ? ':bindVar' : predicateValue);
+    //   // who knows why this is the format they wanted
+    //   return String.format(this.getOperator(), new List<String>{ fieldName }) + endingString;
+    // }
 
     return fieldName + ' ' + this.getOperator() + ' ' + predicateValue;
   }
 
-  public Boolean isEmpty() {
-    return this.getPredicate(this.predicates) == EMPTY;
-  }
+  // public Boolean isEmpty() {
+  //   return this.getPredicate(this.predicates) == EMPTY;
+  // }
 
-  public Boolean equals(Object thatObject) {
-    if (thatObject instanceof QueryBuilder) {
-      QueryBuilder that = (QueryBuilder) thatObject;
-      return this.toString() == that.toString();
-    }
+  // public Boolean equals(Object thatObject) {
+  //   if (thatObject instanceof QueryBuilder) {
+  //     QueryBuilder that = (QueryBuilder) thatObject;
+  //     return this.toString() == that.toString();
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   private String getOperator() {
     String returnVal = '';
@@ -155,27 +157,27 @@ public virtual class QueryBuilder {
       when EQUALS {
         returnVal = isIterable ? 'in' : '=';
       }
-      when NOT_EQUALS {
-        returnVal = isIterable ? 'not in' : '!=';
-      }
-      when LESS_THAN {
-        returnVal = '<';
-      }
-      when LESS_THAN_OR_EQUAL {
-        returnVal = '<=';
-      }
-      when GREATER_THAN {
-        returnVal = '>';
-      }
-      when GREATER_THAN_OR_EQUAL {
-        returnVal = '>=';
-      }
-      when ALIKE {
-        returnVal = 'like';
-      }
-      when NOT_LIKE {
-        returnVal = 'not {0} like';
-      }
+      // when NOT_EQUALS {
+      //   returnVal = isIterable ? 'not in' : '!=';
+      // }
+      // when LESS_THAN {
+      //   returnVal = '<';
+      // }
+      // when LESS_THAN_OR_EQUAL {
+      //   returnVal = '<=';
+      // }
+      // when GREATER_THAN {
+      //   returnVal = '>';
+      // }
+      // when GREATER_THAN_OR_EQUAL {
+      //   returnVal = '>=';
+      // }
+      // when ALIKE {
+      //   returnVal = 'like';
+      // }
+      // when NOT_LIKE {
+      //   returnVal = 'not {0} like';
+      // }
     }
     return returnVal;
   }
@@ -206,22 +208,22 @@ public virtual class QueryBuilder {
       return '\'' + String.escapeSingleQuotes(input) + '\'';
     }
 
-    // it could still be a Set, which is notoriously hard to detect for
-    // due to instanceof Iterable<String> returning false for Sets, despite
-    // Set.class implementing the interface ...
-    try {
-      Iterable<Object> objectSet = (Iterable<Object>) predicate;
-      List<String> innerList = new List<String>();
-      Iterator<Object> objectSetIterator = objectSet.iterator();
-      while (objectSetIterator.hasNext()) {
-        innerList.add(String.valueOf(objectSetIterator.next()));
-      }
-      this.isIterable = innerList.size() > 1;
+    // // it could still be a Set, which is notoriously hard to detect for
+    // // due to instanceof Iterable<String> returning false for Sets, despite
+    // // Set.class implementing the interface ...
+    // try {
+    //   Iterable<Object> objectSet = (Iterable<Object>) predicate;
+    //   List<String> innerList = new List<String>();
+    //   Iterator<Object> objectSetIterator = objectSet.iterator();
+    //   while (objectSetIterator.hasNext()) {
+    //     innerList.add(String.valueOf(objectSetIterator.next()));
+    //   }
+    //   this.isIterable = innerList.size() > 1;
 
-      return this.getPredicate(innerList);
-    } catch (Exception ex) {
-      // do nothing, it didn't work
-    }
+    //   return this.getPredicate(innerList);
+    // } catch (Exception ex) {
+    //   // do nothing, it didn't work
+    // }
     return String.valueOf(predicate);
   }
 }
