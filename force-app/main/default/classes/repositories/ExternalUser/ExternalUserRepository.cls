@@ -4,6 +4,7 @@ public without sharing virtual class ExternalUserRepository extends BaseReposito
             return new List<SObjectField>{
                 this.primaryKey,
                 ExternalUser__c.Name,
+                ExternalUser__c.Account__c,
                 ExternalUser__c.User__c
             };
         }
