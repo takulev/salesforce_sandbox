@@ -5,20 +5,23 @@ public class CommunitiesSelfRegController {
     public String password { get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword { get; set { confirmPassword = value == null ? value : value.trim(); } }
 
-    private ID talentActivityId;
+    private ID userTokenId;
     private WSTalentRepository talentRepository;
     private WSTalentActivityRepository talentActivityRepository;
+    private WSUserTokenRepository tokenRepository;
     private ExternalUserRepository userRepository;
 
     public CommunitiesSelfRegController() {
-        this((ID) ApexPages.currentPage().getParameters().get('taid'));
+        this((ID) ApexPages.currentPage().getParameters().get('token'));
     }
 
-    public CommunitiesSelfRegController(ID talentActivityId) {
+    public CommunitiesSelfRegController(ID token) {
         this.userRepository = new ExternalUserRepository();
-        this.talentActivityId = talentActivityId;
+        this.userTokenId = token;
+        this.userRepository = new ExternalUserRepository();
         this.talentRepository = new WSTalentRepository();
         this.talentActivityRepository = new WSTalentActivityRepository();
+        this.tokenRepository = new WSUserTokenRepository();
         this.initExId();
     }
 
@@ -33,7 +36,9 @@ public class CommunitiesSelfRegController {
 
         User user;
         try {
-            TalentActivity__c talentActivity = this.talentActivityRepository.getById(this.talentActivityId);
+            UserToken__c userToken = this.tokenRepository.getById(this.userTokenId);
+
+            TalentActivity__c talentActivity = this.talentActivityRepository.getById(userToken.TalentActivity__c);
             Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
 
             // FIXME: config内でフロー名を管理
@@ -41,13 +46,13 @@ public class CommunitiesSelfRegController {
             flow.start();
 
             // FIXME: 環境変数に置き換えたい
-            ID accountId = (ID) flow.getVariableValue('varAccountId');
             ID profileId = (ID) flow.getVariableValue('varProfileId');
 
             user = this.buildUser(talent, talentActivity, profileId);
-            ID userId = Site.createExternalUser(user, accountId, password);
+            ID userId = Site.createExternalUser(user, userToken.Account__c, password);
 
             ExternalUser__c externalUser = this.userRepository.doInsert(new Map<String, Object>{
+                'Account__c' => userToken.Account__c,
                 'Name' => user.LastName,
                 'User__c' => userId
             });
