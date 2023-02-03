@@ -1,35 +1,85 @@
 <apex:page showHeader="false" title="{!$Label.site.error2}" cache="false">
-  <apex:composition template="{!$Site.Template}">
-    <apex:define name="body">
-      <center>
-        <apex:panelGrid bgcolor="white" columns="1" style="align: center;">
-          <br/>
-          <br/>
-          <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="1" styleClass="topPanelContainer">
-            <br/>
-            <apex:outputPanel layout="block" styleClass="topPanel">
-              <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="3">
-                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"/>
-                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/warning.png')}"/>
-                <apex:panelGroup >
-                  <apex:outputText styleClass="title" value="{!$Label.site.error}">
-                   <apex:param value="{!$Site.ErrorMessage}"/>
-                   <!-- this parameter needs to be italic in the site.error label -->
-                  </apex:outputText>
-                  <p>エラーが発生しました。お急ぎの方は下記のメールアドレスにお問い合わせください。</p>
-                  <p>メールアドレス：<a href="mailto:mexico_support@leverages.jp">mexico_support@leverages.jp</a></p>
-                  <br/>
-                  <br/>
-                </apex:panelGroup>
-              </apex:panelGrid>
-             </apex:outputPanel>
-            <c:SitePoweredBy />
-          </apex:panelGrid>
-          <br/>
-          <apex:messages />
-          <br/>
-        </apex:panelGrid>
-      </center>
-    </apex:define>
-  </apex:composition>
+  <apex:define name="body">
+    <div class="wrapper">
+      <div class="layout">
+        <main class="mainContent">
+          <p class="title">システムエラー</p>
+          <p class="description">
+            システム上で問題が起きているため、<br/>
+            恐れ入りますが一つ前のページにお戻りください。<br/>
+            お急ぎの方は下記のメールまでご連絡ください。
+          </p>
+          <p class="description">メールアドレス：<a href="mailto:mexico_support@leverages.jp">mexico_support@leverages.jp</a></p><br/>
+          <p class="buttonCustom"><a href="https://lc-mexico.com/info/contact-user/" target="_blank" rel="noopener noreferrer">お問い合わせ</a></p>
+        </main>
+      </div>
+    </div>
+  </apex:define>
+
+  <style>
+    body {
+      font-family: NotoSansCJK,sans-serif;
+      background-color: #FFFDF7;
+    }
+
+    .wrapper {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .layout {
+      width: 500px;
+      min-height: fit-content;
+      background-color: white;
+    }
+
+    .mainContent {
+      padding: 38px 24px 56px 24px;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 600;
+      color: #2F2513;
+      font-size: 18px;
+    }
+
+    .description {
+      text-align: center;
+      color: #2F2513;
+      font-size: 12px;
+    }
+
+    .buttonCustom {
+      width: 200px;
+      height: 48px;
+      margin: auto;
+      color: #FFFFFF;
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #FFFFFF;
+      box-sizing: border-box;
+      border: 1px solid #F38507;
+      border-radius: 24px;
+      font-weight: 600;
+    }
+
+    .buttonCustom a {
+      color: #F38507;
+      text-decoration: none;
+    }
+
+    .buttonCustom a:hover {
+      color: #F38507;
+      text-decoration: none;
+    }
+
+    .buttonCustom:hover {
+      cursor: pointer;
+    }
+  </style>
 </apex:page>

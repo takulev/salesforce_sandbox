@@ -11,9 +11,9 @@
           <p class="title">パスワード設定</p>
           <p class="description">パスワードを設定すると、<br/>そのままマイページへログインされます。</p>
           <apex:form styleClass="form" id="theForm" forceSSL="true">
-            <div class="fieldContainer">
-              <apex:pageMessages id="error"/>
+            <apex:pageMessages id="error"/>
 
+            <div class="fieldContainer">
               <div class="field">
                 <span class="fieldName"><apex:outputLabel value="{!$Label.site.password}" for="password"/></span>
                 <span class="explanation">半角英字・半角数字の両方を含む / 8文字以上</span>

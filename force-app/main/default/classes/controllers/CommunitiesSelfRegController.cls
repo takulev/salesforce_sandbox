@@ -5,11 +5,12 @@ public class CommunitiesSelfRegController {
     public String password { get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword { get; set { confirmPassword = value == null ? value : value.trim(); } }
 
-    private ID userTokenId;
+    private String errorMessage;
     private WSTalentRepository talentRepository;
     private WSTalentActivityRepository talentActivityRepository;
     private WSUserTokenRepository tokenRepository;
     private ExternalUserRepository userRepository;
+    private ID userTokenId;
 
     public CommunitiesSelfRegController() {
         this((ID) ApexPages.currentPage().getParameters().get('token'));
@@ -28,11 +29,14 @@ public class CommunitiesSelfRegController {
     public PageReference registerUser() {
         // TODO: 「初回ログイン管理している場合は、登録させないようにする」
 
-        if (!isValidPassword()) {
-            ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
+        if (validate()) {
+            ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, this.errorMessage);
             ApexPages.addMessage(msg);
             return null;
         }
+        PageReference page = System.Page.Exception;
+            page.setRedirect(true);
+            return page;
 
         User user;
         try {
@@ -89,8 +93,26 @@ public class CommunitiesSelfRegController {
         return user;
     }
 
-    private boolean isValidPassword() {
-        return password == confirmPassword;
+    private boolean validate() {
+        return isEmptyInput() || assertPassword();
+    }
+
+    private boolean isEmptyInput() {
+        Boolean isInvalid = this.password == '' || this.confirmPassword == '';
+        if (isInvalid) {
+            this.errorMessage = 'パスワード/確認用パスワードを入力してください';
+        }
+
+        return isInvalid;
+    }
+
+    private boolean assertPassword() {
+        Boolean isInvalid = this.password != this.confirmPassword;
+        if (isInvalid) {
+            this.errorMessage = Label.site.passwords_dont_match;
+        }
+
+        return isInvalid;
     }
 
     private void initExId() {
