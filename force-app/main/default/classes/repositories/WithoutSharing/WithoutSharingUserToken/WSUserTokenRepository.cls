@@ -9,7 +9,9 @@ public without sharing virtual class WSUserTokenRepository extends BaseRepositor
             return new List<SObjectField>{
                 this.primaryKey,
                 UserToken__c.Account__c,
-                UserToken__c.TalentActivity__c
+                UserToken__c.ExpiredDatetime__c,
+                UserToken__c.TalentActivity__c,
+                UserToken__c.VerifiedDateTime__c
             };
         }
     }

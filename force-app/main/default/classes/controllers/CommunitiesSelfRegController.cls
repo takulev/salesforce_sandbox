@@ -17,30 +17,41 @@ public class CommunitiesSelfRegController {
     }
 
     public CommunitiesSelfRegController(ID token) {
+        this.talentActivityRepository = new WSTalentActivityRepository();
+        this.talentRepository = new WSTalentRepository();
+        this.tokenRepository = new WSUserTokenRepository();
         this.userRepository = new ExternalUserRepository();
         this.userTokenId = token;
         this.userRepository = new ExternalUserRepository();
-        this.talentRepository = new WSTalentRepository();
-        this.talentActivityRepository = new WSTalentActivityRepository();
-        this.tokenRepository = new WSUserTokenRepository();
         this.initExId();
     }
 
     public PageReference registerUser() {
-        // TODO: 「初回ログイン管理している場合は、登録させないようにする」
-
         if (validate()) {
             ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, this.errorMessage);
             ApexPages.addMessage(msg);
             return null;
         }
-        PageReference page = System.Page.Exception;
-            page.setRedirect(true);
-            return page;
 
         User user;
         try {
             UserToken__c userToken = this.tokenRepository.getById(this.userTokenId);
+
+            if(userToken.VerifiedDateTime__c != null) {
+                ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, '既に登録されています。');
+                ApexPages.addMessage(msg);
+                return null;
+            }
+
+            if(Datetime.now() >= userToken.ExpiredDatetime__c) {
+                PageReference page = System.Page.ExpiredException;
+                page.setRedirect(true);
+                return page;
+            }
+
+            this.tokenRepository.doUpdate(userToken.Id, new Map<String, Object>{
+                'VerifiedDateTime__c' => Datetime.now()
+            });
 
             TalentActivity__c talentActivity = this.talentActivityRepository.getById(userToken.TalentActivity__c);
             Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
