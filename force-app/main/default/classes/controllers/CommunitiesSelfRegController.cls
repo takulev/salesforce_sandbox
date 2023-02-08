@@ -33,29 +33,30 @@ public class CommunitiesSelfRegController {
             return null;
         }
 
+        if(this.userTokenId == null) {
+            PageReference page = System.Page.ExpiredException;
+            page.setRedirect(true);
+            return page;
+        }
+
+        UserToken__c userToken = this.tokenRepository.getById(this.userTokenId);
+        if(userToken.VerifiedDateTime__c != null) {
+            ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, '既に登録されています。');
+            ApexPages.addMessage(msg);
+            return null;
+        }
+
+        if(Datetime.now() >= userToken.ExpiredDatetime__c) {
+            PageReference page = System.Page.ExpiredException;
+            page.setRedirect(true);
+            return page;
+        }
+
+        TalentActivity__c talentActivity = this.talentActivityRepository.getById(userToken.TalentActivity__c);
+        Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
+
         User user;
         try {
-            UserToken__c userToken = this.tokenRepository.getById(this.userTokenId);
-
-            if(userToken.VerifiedDateTime__c != null) {
-                ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, '既に登録されています。');
-                ApexPages.addMessage(msg);
-                return null;
-            }
-
-            if(Datetime.now() >= userToken.ExpiredDatetime__c) {
-                PageReference page = System.Page.ExpiredException;
-                page.setRedirect(true);
-                return page;
-            }
-
-            this.tokenRepository.doUpdate(userToken.Id, new Map<String, Object>{
-                'VerifiedDateTime__c' => Datetime.now()
-            });
-
-            TalentActivity__c talentActivity = this.talentActivityRepository.getById(userToken.TalentActivity__c);
-            Talent__c talent = this.talentRepository.getById(talentActivity.TalentName__c);
-
             // FIXME: config内でフロー名を管理
             Flow.Interview flow = Flow.Interview.createInterview('getMypageEnv', new Map<String, Object>{});
             flow.start();
@@ -74,6 +75,10 @@ public class CommunitiesSelfRegController {
 
             this.talentRepository.doUpdate(talent.Id, new Map<String, Object>{
                 'ExternalUser__c' => externalUser.Id
+            });
+
+            this.tokenRepository.doUpdate(userToken.Id, new Map<String, Object>{
+                'VerifiedDateTime__c' => Datetime.now()
             });
         } catch(Site.ExternalUserCreateException e) {
             List<String> errors = e.getDisplayMessages();
