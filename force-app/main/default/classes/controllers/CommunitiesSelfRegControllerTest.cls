@@ -5,9 +5,9 @@
 @IsTest public with sharing class CommunitiesSelfRegControllerTest {
     @IsTest(SeeAllData=true)
     public static void testRegisterUser() {
-        TalentActivity__c talentActivity = [SELECT Id FROM TalentActivity__c limit 1];
+        UserToken__c token = [SELECT Id FROM UserToken__c limit 1];
 
-        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(talentActivity.Id);
+        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(token.Id);
 
         PageReference result = controller.registerUser();
 
@@ -16,9 +16,9 @@
 
     @IsTest(SeeAllData=true)
     public static void testIsValidPassword() {
-        TalentActivity__c talentActivity = [SELECT Id FROM TalentActivity__c limit 1];
+        UserToken__c token = [SELECT Id FROM UserToken__c limit 1];
 
-        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(talentActivity.Id);
+        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(token.Id);
         controller.password = 'test';
         controller.confirmPassword = 'password';
 
@@ -28,10 +28,19 @@
     }
 
     @IsTest(SeeAllData=true)
-    public static void testRegisterUserException() {
-        Talent__c talent = [SELECT Id FROM Talent__c limit 1];
+    public static void testRegisterUserExceptionNonConstructor() {
+        CommunitiesSelfRegController controller = new CommunitiesSelfRegController();
 
-        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(talent.Id);
+        PageReference result = controller.registerUser();
+
+        System.assert(result != System.Page.CommunitiesSelfReg, '[正常系] マイページアカウント発行処理');
+    }
+
+    @IsTest(SeeAllData=true)
+    public static void testRegisterUserException() {
+        UserToken__c token = [SELECT Id FROM UserToken__c limit 1];
+
+        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(token.Id);
 
         PageReference result = controller.registerUser();
 

@@ -1,26 +1,187 @@
-<apex:page id="communitiesSelfRegPage" showHeader="true" controller="CommunitiesSelfRegController" title="{!$Label.site.user_registration}">
+<apex:page id="communitiesSelfRegPage" showHeader="false" controller="CommunitiesSelfRegController" title="{!$Label.site.user_registration}">
+  <meta name="viewport" content="width=device-width, user-scalable=no"/>
+  <script type="text/javascript"
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <apex:define name="body">
-    <center>
-      <apex:form id="theForm" forceSSL="true">
-        <p class="testStyle">vscode deploy</p>
-        <apex:pageMessages id="error"/>
-        <apex:panelGrid columns="2" style="margin-top:1em;">
-          <apex:outputLabel value="{!$Label.site.password}" for="password"/>
-          <apex:inputSecret id="password" value="{!password}"/>
-          <apex:outputLabel value="{!$Label.site.confirm_password}" for="confirmPassword"/>
-          <apex:inputSecret id="confirmPassword" value="{!confirmPassword}"/>
-          <apex:outputText value=""/>
-          <apex:commandButton action="{!registerUser}" value="{!$Label.site.submit}" id="submit"/>
-        </apex:panelGrid>
-        <br/>
-      </apex:form>
-    </center>
-    <br/>
+    <div class="wrapper">
+      <div class="layout">
+        <main class="mainContent">
+          <p class="title">初期設定</p>
+          <p class="description">初期設定後に、<br/>そのままマイページへログインされます。</p>
+          <apex:form styleClass="form" id="theForm" forceSSL="true">
+            <div class="fieldContainer">
+              <apex:pageMessages id="error"/>
+
+              <div class="field">
+                <span class="fieldName"><apex:outputLabel value="{!$Label.site.password}" for="password"/></span>
+                <span class="explanation">半角英字・半角数字の両方を含む / 8文字以上</span>
+                <apex:inputSecret styleClass="text" id="password" value="{!password}"/>
+              </div>
+
+              <div class="field">
+                <span class="fieldName"><apex:outputLabel value="{!$Label.site.confirm_password}" for="confirmPassword"/></span>
+                <apex:inputSecret styleClass="text" id="confirmPassword" value="{!confirmPassword}"/>
+              </div>
+
+              <div class="field radio">
+                <span class="fieldName"><apex:outputLabel value="タイムゾーン" for="timezone"/></span>
+                <span class="explanation">お住まいの地域のタイムゾーン</span>
+                <apex:selectRadio id="timezone" value="{!timezone}">
+                  <apex:selectOptions value="{!timezones}"/>
+                </apex:selectRadio>
+              </div>
+            </div>
+
+            <apex:outputText value=""/>
+            <apex:commandButton styleClass="buttonCustom" action="{!registerUser}" value="設定する" id="submit"/>
+          </apex:form>
+        </main>
+      </div>
+    </div>
   </apex:define>
 
   <style>
-  .testStyle {
-    color: gray;
-  }
+    body {
+      font-family: NotoSansCJK,sans-serif;
+      background-color: #FFFDF7;
+    }
+
+    .wrapper {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .layout {
+      width: 400px;
+      min-height: fit-content;
+      background-color: white;
+    }
+
+    .mainContent {
+      padding: 38px 24px 56px 24px;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 600;
+      color: #2F2513;
+      font-size: 18px;
+    }
+
+    .description {
+      text-align: center;
+      color: #2F2513;
+      font-size: 12px;
+    }
+
+    .form {
+      width: 300px;
+      margin: auto;
+      padding-top: 50px;
+    }
+
+    .fieldContainer {
+      padding-bottom: 30px;
+    }
+
+    .field {
+      display: block;
+      padding-bottom: 24px;
+    }
+
+    .fieldName {
+      font-weight: 600;
+      color: #2F2513;
+    }
+
+    .explanation {
+      padding-left: 5px;
+      color: #a1a1a1;
+      font-size: 10px;
+    }
+
+    .field .text {
+      display: block;
+      width: 100%;
+      height: 40px;
+      margin-top: 10px;
+      padding: 4px 8px;
+      background-color: #f8fafc;
+      border: 1px solid #f4f7ff;
+      border-radius: 4px;
+    }
+
+    .radio label {
+      font-weight: bold;
+    }
+
+    .radio td {
+      display: block;
+    }
+
+    .radio td label {
+      font-size: 12px;
+    }
+
+    input[type='radio']:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #d1d3d1;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+
+    input[type='radio']:checked:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #F38507;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+
+    .field input:focus {
+      outline: none;
+    }
+
+    .buttonCustom {
+      width: 200px;
+      height: 48px;
+      margin: auto;
+      color: #FFFFFF;
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #F38507;
+      box-sizing: border-box;
+      border: 1px solid #F38507;
+      border-radius: 24px;
+      font-weight: 600;
+    }
+
+    .buttonCustom:hover {
+      cursor: pointer;
+    }
   </style>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('input.btn').removeClass('btn');
+    });
+  </script>
 </apex:page>
