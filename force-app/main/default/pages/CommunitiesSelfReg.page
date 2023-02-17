@@ -8,8 +8,8 @@
     <div class="wrapper">
       <div class="layout">
         <main class="mainContent">
-          <p class="title">パスワード設定</p>
-          <p class="description">パスワードを設定すると、<br/>そのままマイページへログインされます。</p>
+          <p class="title">初期設定</p>
+          <p class="description">初期設定後に、<br/>そのままマイページへログインされます。</p>
           <apex:form styleClass="form" id="theForm" forceSSL="true">
             <div class="fieldContainer">
               <apex:pageMessages id="error"/>
@@ -17,11 +17,20 @@
               <div class="field">
                 <span class="fieldName"><apex:outputLabel value="{!$Label.site.password}" for="password"/></span>
                 <span class="explanation">半角英字・半角数字の両方を含む / 8文字以上</span>
-                <apex:inputSecret id="password" value="{!password}"/>
+                <apex:inputSecret styleClass="text" id="password" value="{!password}"/>
               </div>
+
               <div class="field">
                 <span class="fieldName"><apex:outputLabel value="{!$Label.site.confirm_password}" for="confirmPassword"/></span>
-                <apex:inputSecret id="confirmPassword" value="{!confirmPassword}"/>
+                <apex:inputSecret styleClass="text" id="confirmPassword" value="{!confirmPassword}"/>
+              </div>
+
+              <div class="field radio">
+                <span class="fieldName"><apex:outputLabel value="タイムゾーン" for="timezone"/></span>
+                <span class="explanation">お住まいの地域のタイムゾーン</span>
+                <apex:selectRadio id="timezone" value="{!timezone}">
+                  <apex:selectOptions value="{!timezones}"/>
+                </apex:selectRadio>
               </div>
             </div>
 
@@ -95,7 +104,7 @@
       font-size: 10px;
     }
 
-    .field input {
+    .field .text {
       display: block;
       width: 100%;
       height: 40px;
@@ -104,6 +113,46 @@
       background-color: #f8fafc;
       border: 1px solid #f4f7ff;
       border-radius: 4px;
+    }
+
+    .radio label {
+      font-weight: bold;
+    }
+
+    .radio td {
+      display: block;
+    }
+
+    .radio td label {
+      font-size: 12px;
+    }
+
+    input[type='radio']:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #d1d3d1;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+
+    input[type='radio']:checked:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #F38507;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
     }
 
     .field input:focus {

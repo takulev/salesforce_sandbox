@@ -4,7 +4,20 @@
 public class CommunitiesSelfRegController {
     public String password { get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword { get; set { confirmPassword = value == null ? value : value.trim(); } }
+    public String timezone { get { return timezone; } set; }
 
+    public List<SelectOption> timezones {
+        get {
+            List<SelectOption> options = new List<SelectOption>();
+            for (String value: TIMEZONE_MATER.keySet()) {
+                options.add(new SelectOption(value, TIMEZONE_MATER.get(value)));
+            }
+
+            return options;
+        }
+    }
+
+    private String defaultTimezoneKey = 'Asia/Tokyo';
     private String errorMessage;
     private WSTalentRepository talentRepository;
     private WSTalentActivityRepository talentActivityRepository;
@@ -12,11 +25,17 @@ public class CommunitiesSelfRegController {
     private ExternalUserRepository userRepository;
     private ID userTokenId;
 
+    final Map<String, String> TIMEZONE_MATER = new Map<String, String>{
+        'Asia/Tokyo' => '（GMT+09:00）Asia/Tokyo',
+        'America/Mexico_City' => '（GMT-06:00）America/Mexico_City'
+    };
+
     public CommunitiesSelfRegController() {
         this((ID) ApexPages.currentPage().getParameters().get('token'));
     }
 
     public CommunitiesSelfRegController(ID token) {
+        this.timezone = defaultTimezoneKey;
         this.talentActivityRepository = new WSTalentActivityRepository();
         this.talentRepository = new WSTalentRepository();
         this.tokenRepository = new WSUserTokenRepository();
@@ -105,24 +124,34 @@ public class CommunitiesSelfRegController {
         user.CommunityNickname = talent.Name;
         user.Email = talentActivity.Email__c;
         user.ProfileId = profileId;
+        user.TimeZoneSidKey = this.timezone;
 
         return user;
     }
 
-    private boolean validate() {
-        return isEmptyInput() || assertPassword();
+    private Boolean validate() {
+        return isEmptyInput() || assertPassword() || containsTimezone();
     }
 
-    private boolean isEmptyInput() {
-        Boolean isInvalid = this.password == '' || this.confirmPassword == '';
-        if (isInvalid) {
-            this.errorMessage = 'パスワード/確認用パスワードを入力してください';
+    private Boolean containsTimezone() {
+        Boolean isInvalid = !TIMEZONE_MATER.containsKey(this.timezone);
+        if(isInvalid) {
+            this.errorMessage = '適切な値を選択してください';
         }
 
         return isInvalid;
     }
 
-    private boolean assertPassword() {
+    private Boolean isEmptyInput() {
+        Boolean isInvalid = this.password == '' || this.confirmPassword == '' || this.timezone == '';
+        if (isInvalid) {
+            this.errorMessage = '空欄の項目があります。項目を入力してください';
+        }
+
+        return isInvalid;
+    }
+
+    private Boolean assertPassword() {
         Boolean isInvalid = this.password != this.confirmPassword;
         if (isInvalid) {
             this.errorMessage = Label.site.passwords_dont_match;
