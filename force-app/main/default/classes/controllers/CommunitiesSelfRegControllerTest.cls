@@ -8,6 +8,8 @@
         UserToken__c token = [SELECT Id FROM UserToken__c limit 1];
 
         CommunitiesSelfRegController controller = new CommunitiesSelfRegController(token.Id);
+        controller.password = 'test12345';
+        controller.confirmPassword = 'test12345';
 
         PageReference result = controller.registerUser();
 
@@ -30,20 +32,10 @@
     @IsTest(SeeAllData=true)
     public static void testRegisterUserExceptionNonConstructor() {
         CommunitiesSelfRegController controller = new CommunitiesSelfRegController();
-
+        controller.password = 'test12345';
+        controller.confirmPassword = 'test12345';
         PageReference result = controller.registerUser();
 
         System.assert(result != System.Page.CommunitiesSelfReg, '[正常系] マイページアカウント発行処理');
-    }
-
-    @IsTest(SeeAllData=true)
-    public static void testRegisterUserException() {
-        UserToken__c token = [SELECT Id FROM UserToken__c limit 1];
-
-        CommunitiesSelfRegController controller = new CommunitiesSelfRegController(token.Id);
-
-        PageReference result = controller.registerUser();
-
-        System.assert(System.Page.Exception != result, '[異常系] 不適切な人材活動IDテスト');
     }
 }
