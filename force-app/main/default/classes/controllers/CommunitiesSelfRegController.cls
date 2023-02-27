@@ -5,7 +5,6 @@ public class CommunitiesSelfRegController {
     public String password { get; set {password = value == null ? value : value.trim(); } }
     public String confirmPassword { get; set { confirmPassword = value == null ? value : value.trim(); } }
     public String timezone { get { return timezone; } set; }
-
     public List<SelectOption> timezones {
         get {
             List<SelectOption> options = new List<SelectOption>();
@@ -130,7 +129,7 @@ public class CommunitiesSelfRegController {
     }
 
     private Boolean validate() {
-        return isEmptyInput() || assertPassword() || containsTimezone();
+        return isEmptyInput() || isValidPassword() || assertPassword() || containsTimezone();
     }
 
     private Boolean containsTimezone() {
@@ -146,6 +145,19 @@ public class CommunitiesSelfRegController {
         Boolean isInvalid = this.password == '' || this.confirmPassword == '' || this.timezone == '';
         if (isInvalid) {
             this.errorMessage = '空欄の項目があります。項目を入力してください';
+        }
+
+        return isInvalid;
+    }
+
+    private Boolean isValidPassword() {
+        String regex = '^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$';
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(this.password);
+        Boolean isInvalid = ! matcher.matches();
+        if (isInvalid) {
+            this.errorMessage = '半角英字・半角数字の両方を含む / 8文字以上を入力してください';
         }
 
         return isInvalid;
